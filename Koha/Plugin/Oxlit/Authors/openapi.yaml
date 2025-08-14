@@ -1,0 +1,51 @@
+# Note: This is a full specification, but only paths are actually used.
+# Any refs are rewritten as absolute file uris.
+---
+swagger: "2.0"
+paths:
+  /authors:
+    get:
+      x-mojo-to: "Oxlit::Authors::AuthorsController#list"
+      operationId: ListAuthors
+      tags:
+        - authors
+      produces:
+        - application/json
+      responses:
+        200:
+          description: A List of authors
+          schema:
+            type: object
+            properties:
+              authors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                    description: Total number of authors
+                  total_pages:
+                    type: integer
+                    description: Total number of pages
+                  current_page:
+                    type: integer
+                    description: Current page number
+                  per_page:
+                    type: integer
+                    description: Number of items per page
+        401:
+          description: Authentication required
+          schema:
+            type: object
+            properties:
+              error:
+                description: An explanation for the error
+                type: string
