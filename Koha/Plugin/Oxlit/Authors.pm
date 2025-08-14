@@ -20,8 +20,6 @@ our $metadata = {
     namespace       => 'oxlit',
 };
 
-## This is the minimum code required for a plugin's 'new' method
-## More can be added, but none should be removed
 sub new {
     my ( $class, $args ) = @_;
 
@@ -37,13 +35,6 @@ sub new {
     return $self;
 }
 
-## API methods
-# If your plugin implements API routes, then the 'api_routes' method needs
-# to be implemented, returning valid OpenAPI 2.0 paths serialized as a hashref.
-# It is a good practice to actually write OpenAPI 2.0 path specs in JSON on the
-# plugin and read it here. This allows to use the spec for mainline Koha later,
-# thus making this a good prototyping tool.
-
 sub api_routes {
     my ( $self, $args ) = @_;
 
@@ -58,6 +49,27 @@ sub api_namespace {
     my ( $self ) = @_;
 
     return 'oxlit';
+}
+
+# Mandatory even if does nothing
+sub install {
+    my ( $self, $args ) = @_;
+
+    return 1;
+}
+
+# Mandatory even if does nothing
+sub upgrade {
+    my ( $self, $args ) = @_;
+
+    return 1;
+}
+
+# Mandatory even if does nothing
+sub uninstall {
+    my ( $self, $args ) = @_;
+
+    return 1;
 }
 
 1;
