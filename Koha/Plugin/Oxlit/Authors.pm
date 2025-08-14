@@ -7,16 +7,13 @@ use base qw(Koha::Plugins::Base);
 use C4::Context;
 use Mojo::JSON qw(decode_json);
 
-## Here we set our plugin version
 our $VERSION = "{VERSION}";
-our $MINIMUM_VERSION = "{MINIMUM_VERSION}";
 
-## Here is our metadata, some keys are required, some are optional
 our $metadata = {
     name            => 'Authors API Plugin',
     author          => 'Diarmuid',
     date_authored   => '2025-08-07',
-    minimum_version => $MINIMUM_VERSION,
+    minimum_version => '24.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
     description     => 'This plugin implements an API for authors, allowing you to list authors.',
