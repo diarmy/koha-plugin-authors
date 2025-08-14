@@ -1,7 +1,7 @@
 {
   "/authors": {
     "get": {
-      "x-mojo-to": "Authors::AuthorsController#list",
+      "x-mojo-to": "Oxlit::Authors::AuthorsController#list",
       "operationId": "ListAuthors",
       "tags": ["authors"],
       "produces": ["application/json"],
