@@ -22,7 +22,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    biblionumber:
                       type: integer
                     author:
                       type: string
@@ -41,6 +41,14 @@ paths:
                   per_page:
                     type: integer
                     description: Number of items per page
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              error:
+                description: An explanation for the error
+                type: string
         401:
           description: Authentication required
           schema:
