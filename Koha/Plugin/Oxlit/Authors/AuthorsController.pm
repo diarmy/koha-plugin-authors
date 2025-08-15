@@ -48,9 +48,7 @@ sub list {
     my ($total_count) = $count_sth->fetchrow_array;
     
     # Get paginated authors
-    my $sth = $dbh->prepare("SELECT author FROM biblio WHERE author IS NOT NULL 
-                             AND author NOT REGEXP '^[[:digit:]]+$' 
-                             GROUP BY author ORDER BY author LIMIT ? OFFSET ?");
+    my $sth = $dbh->prepare("SELECT author FROM biblio WHERE author IS NOT NULL GROUP BY author ORDER BY author LIMIT ? OFFSET ?");
     $sth->execute($per_page, $offset);
     
     my $authors = $sth->fetchall_arrayref({});
