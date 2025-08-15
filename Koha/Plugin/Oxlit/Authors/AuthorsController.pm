@@ -51,7 +51,7 @@ sub list {
     my $sth = $dbh->prepare("SELECT biblionumber, author FROM biblio GROUP BY author ORDER BY author LIMIT ? OFFSET ?");
     $sth->execute($per_page, $offset);
     
-    my $authors = $sth->fetchall_arrayref( { Slice => {} } );
+    my $authors = $sth->fetchall_arrayref({});
     
     unless ($authors) {
         return $c->render( status => 404, openapi => { error => "No authors found." } );
