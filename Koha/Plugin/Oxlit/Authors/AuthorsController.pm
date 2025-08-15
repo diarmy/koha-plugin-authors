@@ -48,7 +48,7 @@ sub list {
     my ($total_count) = $count_sth->fetchrow_array;
     
     # Get paginated authors
-    my $sth = $dbh->prepare("SELECT id, author FROM biblio GROUP BY author ORDER BY author LIMIT ? OFFSET ?");
+    my $sth = $dbh->prepare("SELECT biblionumber, author FROM biblio GROUP BY author ORDER BY author LIMIT ? OFFSET ?");
     $sth->execute($per_page, $offset);
     
     my $authors = $sth->fetchall_arrayref( { Slice => {} } );
