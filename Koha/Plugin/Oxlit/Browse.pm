@@ -1,4 +1,4 @@
-package Koha::Plugin::Oxlit::Authors;
+package Koha::Plugin::Oxlit::Browse;
 
 use Modern::Perl;
 
@@ -10,13 +10,13 @@ use Mojo::JSON qw(decode_json);
 our $VERSION = "{VERSION}";
 
 our $metadata = {
-    name            => 'Authors API Plugin',
+    name            => 'Oxlit Browse Plugin',
     author          => 'Diarmuid',
     date_authored   => '2025-08-07',
     minimum_version => '24.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
-    description     => 'This plugin implements an API for authors, allowing you to list authors.',
+    description     => 'A series of APIs to browse bibliographic data.',
     namespace       => 'oxlit',
 };
 
