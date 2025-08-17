@@ -11,6 +11,17 @@ paths:
         - authors
       produces:
         - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
       responses:
         200:
           description: A List of authors
@@ -55,7 +66,7 @@ paths:
               error:
                 description: An explanation for the error
                 type: string
-  /series-title:
+  /series-titles:
     get:
       x-mojo-to: "Oxlit::Browse::SeriesTitlesController#list"
       operationId: ListSeriesTitles
@@ -63,6 +74,17 @@ paths:
         - seriestitles
       produces:
         - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
       responses:
         200:
           description: A List of series titles
