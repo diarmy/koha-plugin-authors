@@ -1,9 +1,9 @@
-name: Oxlit Authors Plugin
+name: Oxlit Browse Plugin
 author: Diarmuid
 date_authored: 2025-08-07
 date_updated: 2025-08-07
 minimum_version: {MINIMUM_VERSION}
 maximum_version:
 version: {VERSION}
-description: An API for listing authors in Koha.
-module: Koha::Plugin::Oxit::Authors
+description: An API for browsing bibliographic data in Koha.
+module: Koha::Plugin::Oxlit::Browse
