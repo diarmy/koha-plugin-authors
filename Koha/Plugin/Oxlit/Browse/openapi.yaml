@@ -5,7 +5,7 @@ swagger: "2.0"
 paths:
   /authors:
     get:
-      x-mojo-to: "Oxlit::Authors::AuthorsController#list"
+      x-mojo-to: "Oxlit::Browse::AuthorsController#list"
       operationId: ListAuthors
       tags:
         - authors
@@ -47,6 +47,50 @@ paths:
               error:
                 description: An explanation for the error
                 type: string
+        401:
+          description: Authentication required
+          schema:
+            type: object
+            properties:
+              error:
+                description: An explanation for the error
+                type: string
+  /series-title:
+    get:
+      x-mojo-to: "Oxlit::Browse::SeriesTitlesController#list"
+      operationId: ListSeriesTitles
+      tags:
+        - seriestitles
+      produces:
+        - application/json
+      responses:
+        200:
+          description: A List of series titles
+          schema:
+            type: object
+            properties:
+              seriestitles:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    seriestitle:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                    description: Total number of series titles
+                  total_pages:
+                    type: integer
+                    description: Total number of pages
+                  current_page:
+                    type: integer
+                    description: Current page number
+                  per_page:
+                    type: integer
+                    description: Number of items per page
         401:
           description: Authentication required
           schema:

@@ -1,4 +1,4 @@
-package Koha::Plugin::Oxlit::Authors::AuthorsController;
+package Koha::Plugin::Oxlit::Browse::AuthorsController;
 
 # This file is part of Koha.
 #
