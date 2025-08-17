@@ -11,6 +11,17 @@ paths:
         - authors
       produces:
         - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
       responses:
         200:
           description: A List of authors
@@ -63,6 +74,17 @@ paths:
         - seriestitles
       produces:
         - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
       responses:
         200:
           description: A List of series titles
