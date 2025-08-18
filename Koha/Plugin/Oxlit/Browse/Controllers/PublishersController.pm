@@ -55,7 +55,7 @@ sub list {
         { publisher => 'Yale University Press' }
     ];
     
-    $total_count = scalar(@$publishers);
+    my $total_count = scalar(@$publishers);
 
     # Calculate pagination metadata
     my $total_pages = int(($total_count + $per_page - 1) / $per_page);
