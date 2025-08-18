@@ -5,7 +5,7 @@ swagger: "2.0"
 paths:
   /authors:
     get:
-      x-mojo-to: "Oxlit::Browse::AuthorsController#list"
+      x-mojo-to: "Oxlit::Browse::Controllers::AuthorsController#list"
       operationId: ListAuthors
       tags:
         - authors
@@ -66,9 +66,64 @@ paths:
               error:
                 description: An explanation for the error
                 type: string
+  /publishers:
+    get:
+      x-mojo-to: "Oxlit::Browse::Controllers::PublishersController#list"
+      operationId: ListPublishers
+      tags:
+        - publishers
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+      responses:
+        200:
+          description: A List of publishers
+          schema:
+            type: object
+            properties:
+              publishers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    publisher:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                    description: Total item count
+                  total_pages:
+                    type: integer
+                    description: Total number of pages
+                  current_page:
+                    type: integer
+                    description: Current page number
+                  per_page:
+                    type: integer
+                    description: Number of items per page
+        401:
+          description: Authentication required
+          schema:
+            type: object
+            properties:
+              error:
+                description: An explanation for the error
+                type: string
   /series-titles:
     get:
-      x-mojo-to: "Oxlit::Browse::SeriesTitlesController#list"
+      x-mojo-to: "Oxlit::Browse::Controllers::SeriesTitlesController#list"
       operationId: ListSeriesTitles
       tags:
         - seriestitles
