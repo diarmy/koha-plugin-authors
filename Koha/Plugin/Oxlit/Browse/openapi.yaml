@@ -66,6 +66,62 @@ paths:
               error:
                 description: An explanation for the error
                 type: string
+    /authors:
+  /authors-as-subject:
+    get:
+    x-mojo-to: "Oxlit::Browse::Controllers::AuthorsAsSubjectController#list"
+    operationId: ListAuthorsAsSubject
+    tags:
+      - authorsassubject
+    produces:
+      - application/json
+    parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        type: integer
+      - name: per_page
+        in: query
+        description: Number of items per page
+        required: false
+        type: integer
+    responses:
+      200:
+        description: A List of authors as subject
+        schema:
+          type: object
+          properties:
+            subjects:
+              type: array
+              items:
+                type: object
+                properties:
+                  subject:
+                    type: string
+            pagination:
+              type: object
+              properties:
+                total_count:
+                  type: integer
+                  description: Total number of authors as subject
+                total_pages:
+                  type: integer
+                  description: Total number of pages
+                current_page:
+                  type: integer
+                  description: Current page number
+                per_page:
+                  type: integer
+                  description: Number of items per page
+      401:
+        description: Authentication required
+        schema:
+          type: object
+          properties:
+            error:
+              description: An explanation for the error
+              type: string
   /publishers:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::PublishersController#list"
