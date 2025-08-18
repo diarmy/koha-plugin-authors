@@ -1,4 +1,4 @@
-package Koha::Plugin::Oxlit::Browse::SeriesTitlesController;
+package Koha::Plugin::Oxlit::Browse::Controllers::PublishersController;
 
 # This file is part of Koha.
 #
@@ -26,7 +26,7 @@ use C4::Context;
 
 =head2 Class Methods
 
-=head3 Method to return a list of series titles
+=head3 Method to return a list of authors
 
 =cut
 
@@ -40,30 +40,30 @@ sub list {
     # Calculate offset
     my $offset = ($page - 1) * $per_page;
     
-    my $dbh = C4::Context->dbh;
+    my $publishers = [
+        { publisher => 'Oxford University Press' },
+        { publisher => 'Cambridge University Press' },
+        { publisher => 'Penguin Random House' },
+        { publisher => 'HarperCollins' },
+        { publisher => 'Macmillan Publishers' },
+        { publisher => 'Simon & Schuster' },
+        { publisher => 'Hachette Book Group' },
+        { publisher => 'Wiley' },
+        { publisher => 'Pearson Education' },
+        { publisher => 'Elsevier' },
+        { publisher => 'Scholastic' },
+        { publisher => 'Yale University Press' }
+    ];
     
-    # Get total count for pagination
-    my $count_sth = $dbh->prepare("SELECT COUNT(DISTINCT seriestitle) FROM biblio");
-    $count_sth->execute;
-    my ($total_count) = $count_sth->fetchrow_array;
+    $total_count = scalar(@$publishers);
 
-    # Get paginated series titles
-    my $sth = $dbh->prepare("SELECT seriestitle FROM biblio WHERE seriestitle IS NOT NULL GROUP BY seriestitle ORDER BY seriestitle LIMIT ? OFFSET ?");
-    $sth->execute($per_page, $offset);
-    
-    my $series_titles = $sth->fetchall_arrayref({});
-    
-    unless ($series_titles) {
-        $series_titles = [];
-    }
-    
     # Calculate pagination metadata
     my $total_pages = int(($total_count + $per_page - 1) / $per_page);
     
     return $c->render(
         status => 200,
         openapi => {
-            seriestitles => $series_titles,
+            publishers => $publishers,
             pagination => {
                 total_count => $total_count,
                 total_pages => $total_pages,
