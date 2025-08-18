@@ -55,31 +55,6 @@ sub api_namespace {
 # Mandatory even if does nothing
 sub install {
     my ( $self, $args ) = @_;
-
-    my $dbh = C4::Context->dbh;
-    
-    # Check if the documenttype column already exists
-    my $sth = $dbh->prepare("SHOW COLUMNS FROM biblio LIKE 'documenttype'");
-    $sth->execute();
-    
-    # Add the column if it doesn't exist
-    if ($sth->rows == 0) {
-        $dbh->do("ALTER TABLE biblio ADD COLUMN documenttype LONGTEXT DEFAULT NULL COMMENT 'Document type classification added by Oxlit Browse Plugin'");
-        
-        # Log the change
-        $self->_version_check();
-    }
-
-    # Update marc_subfield_structure to point 911$a to biblio.documenttype
-    my $update_sth = $dbh->prepare("
-        UPDATE marc_subfield_structure 
-        SET kohafield = 'biblio.documenttype' 
-        WHERE tagfield = '911' AND tagsubfield = 'a'
-    ");
-    $update_sth->execute();
-    
-    # Log the change
-    $self->_version_check();
     
     return 1;
 }
