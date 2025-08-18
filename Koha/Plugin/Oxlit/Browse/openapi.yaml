@@ -176,3 +176,58 @@ paths:
               error:
                 description: An explanation for the error
                 type: string
+  /subjects:
+    get:
+      x-mojo-to: "Oxlit::Browse::Controllers::SubjectsController#list"
+      operationId: ListSubjects
+      tags:
+        - subjects
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+      responses:
+        200:
+          description: A List of subjects
+          schema:
+            type: object
+            properties:
+              subjects:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    subject:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                    description: Total number of series titles
+                  total_pages:
+                    type: integer
+                    description: Total number of pages
+                  current_page:
+                    type: integer
+                    description: Current page number
+                  per_page:
+                    type: integer
+                    description: Number of items per page
+        401:
+          description: Authentication required
+          schema:
+            type: object
+            properties:
+              error:
+                description: An explanation for the error
+                type: string
