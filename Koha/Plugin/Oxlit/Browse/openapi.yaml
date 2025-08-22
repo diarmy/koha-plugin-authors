@@ -121,6 +121,123 @@ paths:
               error:
                 description: An explanation for the error
                 type: string
+    /titles:
+    get:
+      x-mojo-to: "Oxlit::Browse::Controllers::TitlesController#list"
+      operationId: ListTitles
+      tags:
+        - titles
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+      responses:
+        200:
+          description: A List of titles
+          schema:
+            type: object
+            properties:
+              titles:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                    description: Total number of series titles
+                  total_pages:
+                    type: integer
+                    description: Total number of pages
+                  current_page:
+                    type: integer
+                    description: Current page number
+                  per_page:
+                    type: integer
+                    description: Number of items per page
+        401:
+          description: Authentication required
+          schema:
+            type: object
+            properties:
+              error:
+                description: An explanation for the error
+                type: string
+  /biblios/fastaccess:
+    get:
+      x-mojo-to: "Oxlit::Browse::Controllers::BibliosFastAccessController#list"
+      operationId: ListFastAccessBiblios
+      tags:
+        - fastaccess
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+      responses:
+        200:
+          description: A List of biblios for fast access
+          schema:
+            type: object
+            properties:
+              biblios:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    author:
+                      type: string
+                    publicationYear:
+                      type: integer
+                    publisher:
+                      type: string
+                    title:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                    description: Total number of items
+                  total_pages:
+                    type: integer
+                    description: Total number of pages
+                  current_page:
+                    type: integer
+                    description: Current page number
+                  per_page:
+                    type: integer
+                    description: Number of items per page
+        401:
+          description: Authentication required
+          schema:
+            type: object
+            properties:
+              error:
+                description: An explanation for the error
+                type: string
+
   /publishers:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::PublishersController#list"
