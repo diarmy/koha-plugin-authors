@@ -58,9 +58,9 @@ sub list {
     my $cgi = CGI->new;
     my $lang = C4::Languages::getlanguage($cgi);
     my @limits = ();
-    my @operands = ('Oxford');
+    my @operands = ('Poetry, Ancient');
     my @operators = ();
-    my @indexes = ('pb');
+    my @indexes = ('su,phr');
     my @sort_by = ('title_az');
     my $weight_search = 0;
     my $whole_record = 0;
@@ -94,11 +94,23 @@ sub list {
         );
     };
 
-    my $total_count = $results_hashref->{$server}->{"hits"} // 0;
-    
     # Calculate pagination metadata
+    my $total_count = $results_hashref->{$server}->{"hits"} // 0;
     my $total_pages = int(($total_count + $per_page - 1) / $per_page);
-    # my $biblios =$results_hashref->{$server}->{"RECORDS"};
+
+    # Retrieve results
+    my @newresults = searchResults(
+        { 'interface' => 'intranet' }, $query_desc, $total_count, $per_page, $offset, $scan,
+        $results_hashref->{$server}->{"RECORDS"}
+    );
+
+    foreach my $result (@newresults) {
+        my $biblio = {};
+        $biblio->{author} = $result->{author} if exists $result->{author};
+        $biblio->{title} = $result->{title} if exists $result->{title};
+    
+        push @$biblios, $biblio;
+    }
 
     return $c->render(
         status => 200,
