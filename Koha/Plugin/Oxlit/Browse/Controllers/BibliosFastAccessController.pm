@@ -43,6 +43,7 @@ Returns the string 'example'
 sub getMARCRecords {
     my ( $hits, $results_per_page, $offset, $marcresults ) = @_;
     my @newresults;
+    my $marcrecord;
 
     my $times;    # Times is which record to process up to
     if ( $hits && $offset + $results_per_page <= $hits ) {
