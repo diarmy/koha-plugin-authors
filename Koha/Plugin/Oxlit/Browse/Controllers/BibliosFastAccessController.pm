@@ -62,7 +62,7 @@ sub list {
     my @operands = ($q);
     my @operators = ();
     my @indexes = ('su,phr');
-    my @sort_by = ('title_az');
+    my @sort_by = $c->param('sort_by') ? ($c->param('sort_by')) : ();
     my $weight_search = 0;
     my $whole_record = 0;
     my $scan = 0;
