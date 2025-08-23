@@ -145,6 +145,15 @@ paths:
           description: Search query
           required: true
           type: string
+        - name: sort_by
+          in: query
+          description: Sort order (title_az or title_za)
+          required: false
+          type: string
+          enum:
+            - author_az
+            - pubdate_dsc
+            - title_az
       responses:
         200:
           description: A List of biblios for fast access
