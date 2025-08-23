@@ -21,7 +21,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use C4::Auth;
 use C4::Context;
-use C4::Search      qw( searchResults enabled_staff_search_views z3950_search_args new_record_from_zebra );
+use C4::Search      qw( enabled_staff_search_views z3950_search_args new_record_from_zebra );
 use C4::Languages   qw( getlanguage getLanguages );
 use C4::Koha        qw( getitemtypeimagelocation GetAuthorisedValues );
 use URI::Escape;
@@ -33,6 +33,34 @@ use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
 use Koha::SearchFields;
 use Koha::SearchFilters;
+
+=head3 example
+
+Returns the string 'example'
+
+=cut
+
+sub getMARCRecords {
+    my ( $hits, $results_per_page, $offset, $marcresults ) = @_;
+    my @newresults;
+
+    my $times;    # Times is which record to process up to
+    if ( $hits && $offset + $results_per_page <= $hits ) {
+        $times = $offset + $results_per_page;
+    } else {
+        $times = $hits // 0;    # If less hits than results_per_page+offset we go to the end
+    }
+
+    for ( my $i = $offset ; $i <= $times - 1 ; $i++ ) {
+        $marcrecord = new_record_from_zebra(
+                'biblioserver',
+                $marcresults->[$i]
+            );
+        push( @newresults, $marcrecord );
+    }
+
+    return \@newresults;
+}
 
 =head1 API
 
@@ -100,16 +128,13 @@ sub list {
     my $total_pages = int(($total_count + $per_page - 1) / $per_page);
 
     # Retrieve results
-    my @newresults = searchResults(
-        { 'interface' => 'intranet' }, $query_desc, $total_count, $per_page, $offset, $scan,
-        $results_hashref->{$server}->{"RECORDS"}
-    );
+    my @records = getMARCRecords($total_count, $per_page, $offset, $results_hashref->{$server}->{"RECORDS"});
 
-    foreach my $result (@newresults) {
+    foreach my $record (@records) {
         my $biblio = {};
-        $biblio->{author} = $result->{author} if exists $result->{author};
-        $biblio->{title} = $result->{title} if exists $result->{title};
-    
+        $biblio->{author} = $record->subfield('100', 'a') || $record->subfield('700', 'a');
+        $biblio->{title} = $record->subfield('245', 'a');
+
         push @$biblios, $biblio;
     }
 
