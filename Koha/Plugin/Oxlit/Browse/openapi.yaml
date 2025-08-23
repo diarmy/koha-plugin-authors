@@ -140,6 +140,11 @@ paths:
           description: Number of items per page
           required: false
           type: integer
+        - name: q
+          in: query
+          description: Search query
+          required: true
+          type: string
       responses:
         200:
           description: A List of biblios for fast access

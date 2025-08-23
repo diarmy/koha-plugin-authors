@@ -48,7 +48,8 @@ sub list {
     # Get pagination parameters
     my $page = $c->param('page') || 1;
     my $per_page = $c->param('per_page') || 20;
-    
+    my $q = $c->param('q') || '';
+
     # Calculate offset
     my $offset = ($page - 1) * $per_page;
     my $biblios = [];
@@ -58,7 +59,7 @@ sub list {
     my $cgi = CGI->new;
     my $lang = C4::Languages::getlanguage($cgi);
     my @limits = ();
-    my @operands = ('Poetry, Ancient');
+    my @operands = ($q);
     my @operators = ();
     my @indexes = ('su,phr');
     my @sort_by = ('title_az');
