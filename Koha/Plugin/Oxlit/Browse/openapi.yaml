@@ -167,19 +167,14 @@ paths:
                   properties:
                     author:
                       type: string
-                      x-nullable: true
                     author_dates:
                       type: string
-                      x-nullable: true
                     title:
                       type: string
-                      x-nullable: true
                     title_remainder:
                       type: string
-                      x-nullable: true
                     statement_of_responsibility:
                       type: string
-                      x-nullable: true
               pagination:
                 type: object
                 properties:
