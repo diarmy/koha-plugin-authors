@@ -57,6 +57,12 @@ sub getMARCRecords {
                 'biblioserver',
                 $marcresults->[$i]
             );
+
+        if ( !defined $marcrecord ) {
+            warn "ERROR DECODING RECORD - $@: " . $marcresults->[$i];
+            next;
+        }
+         
         push( @newresults, $marcrecord );
     }
 
