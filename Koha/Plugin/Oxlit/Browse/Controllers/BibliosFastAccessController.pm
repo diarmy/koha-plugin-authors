@@ -135,7 +135,7 @@ sub list {
     my $total_pages = int(($total_count + $per_page - 1) / $per_page);
 
     # Retrieve results
-    my @records = getMARCRecords($total_count, $per_page, $offset, $results_hashref->{$server}->{"RECORDS"});
+    my @records =  @{ getMARCRecords($total_count, $per_page, $offset, $results_hashref->{$server}->{"RECORDS"}) };
 
     foreach my $record (@records) {
         my $biblio = {};
