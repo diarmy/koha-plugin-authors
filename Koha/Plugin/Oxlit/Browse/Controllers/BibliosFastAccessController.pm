@@ -139,8 +139,11 @@ sub list {
 
     foreach my $record (@records) {
         my $biblio = {};
-        $biblio->{author} = $record->subfield('100', 'a') || $record->subfield('700', 'a');
+        $biblio->{author} = $record->subfield('100', 'a');
+        $biblio->{author_dates} = $record->subfield('100', 'd');
         $biblio->{title} = $record->subfield('245', 'a');
+        $biblio->{title_remainder} = $record->subfield('245', 'b');
+        $biblio->{statement_of_responsibility} = $record->subfield('245', 'c');
 
         push @$biblios, $biblio;
     }
