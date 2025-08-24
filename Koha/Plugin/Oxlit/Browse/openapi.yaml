@@ -175,6 +175,12 @@ paths:
                       type: string
                     statement_of_responsibility:
                       type: string
+                    title_proper:
+                      type: string
+                    title_proper_remainder:
+                      type: string
+                    edition_statement:
+                      type: string
               pagination:
                 type: object
                 properties:

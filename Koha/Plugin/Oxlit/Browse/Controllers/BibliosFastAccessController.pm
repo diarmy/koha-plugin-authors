@@ -144,6 +144,9 @@ sub list {
         $biblio->{title} = $record->subfield('245', 'a') || '';
         $biblio->{title_remainder} = $record->subfield('245', 'b') || '';
         $biblio->{statement_of_responsibility} = $record->subfield('245', 'c') || '';
+        $biblio->{title_proper} = $record->subfield('246', 'a') || '';
+        $biblio->{title_proper_remainder} = $record->subfield('246', 'b') || '';
+        $biblio->{edition_statement} = $record->subfield('250', 'a') || '';
 
         push @$biblios, $biblio;
     }
