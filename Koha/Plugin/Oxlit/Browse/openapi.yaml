@@ -134,7 +134,7 @@ paths:
           in: query
           description: Search in
           required: true
-          type: enum
+          type: string
           enum:
             - au,phr
             - kw,phr
