@@ -136,11 +136,11 @@ paths:
           required: true
           type: string
           enum:
-            - au,phr
-            - kw,phr
-            - pb,phr
-            - su,phr
-            - ti,phr
+            - au
+            - kw
+            - pb
+            - su
+            - ti
         - name: page
           in: query
           description: Page number
