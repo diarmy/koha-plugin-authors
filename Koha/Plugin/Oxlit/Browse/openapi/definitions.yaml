@@ -1,0 +1,3 @@
+---
+biblios:
+  $ref: ./definitions/biblios.yaml
