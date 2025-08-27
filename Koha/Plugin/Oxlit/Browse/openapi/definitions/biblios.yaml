@@ -78,3 +78,18 @@ properties:
         document_type:
           type: string
           description: Document type (MARC field 911a)
+  pagination:
+    type: object
+    properties:
+      total_count:
+        type: integer
+        description: Total number of items
+      total_pages:
+        type: integer
+        description: Total number of pages
+      current_page:
+        type: integer
+        description: Current page number
+      per_page:
+        type: integer
+        description: Number of items per page
