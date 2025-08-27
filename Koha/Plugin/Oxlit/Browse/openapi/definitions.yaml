@@ -1,3 +1,7 @@
 ---
 biblios:
   $ref: ./definitions/biblios.yaml
+error:
+  $ref: ./definitions/error.yaml
+pagination:
+  $ref: ./definitions/pagination.yaml

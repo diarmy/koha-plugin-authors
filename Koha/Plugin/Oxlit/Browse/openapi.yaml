@@ -36,36 +36,15 @@ paths:
                     author:
                       type: string
               pagination:
-                type: object
-                properties:
-                  total_count:
-                    type: integer
-                    description: Total number of authors
-                  total_pages:
-                    type: integer
-                    description: Total number of pages
-                  current_page:
-                    type: integer
-                    description: Current page number
-                  per_page:
-                    type: integer
-                    description: Number of items per page
+                $ref: ./openapi/definitions.yaml#/pagination
         404:
           description: Not Found
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
   /authors-as-subject:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::AuthorsAsSubjectController#list"
@@ -99,28 +78,11 @@ paths:
                     subject:
                       type: string
               pagination:
-                type: object
-                properties:
-                  total_count:
-                    type: integer
-                    description: Total number of authors as subject
-                  total_pages:
-                    type: integer
-                    description: Total number of pages
-                  current_page:
-                    type: integer
-                    description: Current page number
-                  per_page:
-                    type: integer
-                    description: Number of items per page
+                $ref: ./openapi/definitions.yaml#/pagination
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
   /biblios/basicsearch:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::BibliosBasicSearchController#list"
@@ -174,11 +136,7 @@ paths:
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
   /biblios/fastaccess:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::BibliosFastAccessController#list"
@@ -220,11 +178,7 @@ paths:
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
   /publishers:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::PublishersController#list"
@@ -258,28 +212,11 @@ paths:
                     publisher:
                       type: string
               pagination:
-                type: object
-                properties:
-                  total_count:
-                    type: integer
-                    description: Total item count
-                  total_pages:
-                    type: integer
-                    description: Total number of pages
-                  current_page:
-                    type: integer
-                    description: Current page number
-                  per_page:
-                    type: integer
-                    description: Number of items per page
+                $ref: ./openapi/definitions.yaml#/pagination
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
   /series-titles:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::SeriesTitlesController#list"
@@ -313,28 +250,11 @@ paths:
                     seriestitle:
                       type: string
               pagination:
-                type: object
-                properties:
-                  total_count:
-                    type: integer
-                    description: Total number of series titles
-                  total_pages:
-                    type: integer
-                    description: Total number of pages
-                  current_page:
-                    type: integer
-                    description: Current page number
-                  per_page:
-                    type: integer
-                    description: Number of items per page
+                $ref: ./openapi/definitions.yaml#/pagination
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
   /subjects:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::SubjectsController#list"
@@ -368,28 +288,11 @@ paths:
                     subject:
                       type: string
               pagination:
-                type: object
-                properties:
-                  total_count:
-                    type: integer
-                    description: Total number of series titles
-                  total_pages:
-                    type: integer
-                    description: Total number of pages
-                  current_page:
-                    type: integer
-                    description: Current page number
-                  per_page:
-                    type: integer
-                    description: Number of items per page
+                $ref: ./openapi/definitions.yaml#/pagination
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
   /titles:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::TitlesController#list"
@@ -423,25 +326,8 @@ paths:
                     title:
                       type: string
               pagination:
-                type: object
-                properties:
-                  total_count:
-                    type: integer
-                    description: Total number of series titles
-                  total_pages:
-                    type: integer
-                    description: Total number of pages
-                  current_page:
-                    type: integer
-                    description: Current page number
-                  per_page:
-                    type: integer
-                    description: Number of items per page
+                $ref: ./openapi/definitions.yaml#/pagination
         401:
           description: Authentication required
           schema:
-            type: object
-            properties:
-              error:
-                description: An explanation for the error
-                type: string
+            $ref: ./openapi/definitions.yaml#/error
