@@ -1,0 +1,15 @@
+---
+type: object
+properties:
+  total_count:
+    type: integer
+    description: Total number of series titles
+  total_pages:
+    type: integer
+    description: Total number of pages
+  current_page:
+    type: integer
+    description: Current page number
+  per_page:
+    type: integer
+    description: Number of items per page
