@@ -132,7 +132,12 @@ paths:
         200:
           description: A List of biblios
           schema:
-            $ref: ./openapi/definitions.yaml#/biblios
+            type: object
+            properties:
+              biblios:
+                $ref: ./openapi/definitions.yaml#/biblios
+              pagination:
+                $ref: ./openapi/definitions.yaml#/pagination
         401:
           description: Authentication required
           schema:
@@ -174,7 +179,12 @@ paths:
         200:
           description: A List of biblios for fast access
           schema:
-            $ref: ./openapi/definitions.yaml#/biblios
+            type: object
+            properties:
+              biblios:
+                $ref: ./openapi/definitions.yaml#/biblios
+              pagination:
+                $ref: ./openapi/definitions.yaml#/pagination
         401:
           description: Authentication required
           schema:
