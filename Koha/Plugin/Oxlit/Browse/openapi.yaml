@@ -100,12 +100,12 @@ paths:
           items:
             type: string
             enum:
-              - au,phr
+              - au_phr
               - kw
-              - pb,phr
+              - pb_phr
               - se
-              - su,phr
-              - ti,phr
+              - su_phr
+              - ti_phr
         - name: page
           in: query
           description: Page number

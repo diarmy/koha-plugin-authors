@@ -83,7 +83,7 @@ sub list {
     my $page = $c->param('page') || 1;
     my $per_page = $c->param('per_page') || 20;
     my @operands = $c->param('q[]') || ();
-    my @indexes = $c->param('search_in[]') || ();
+    my @indexes = map { s/_/,/g; $_ } $c->param('search_in[]') || ();
     my @sort_by = $c->param('sort_by') ? ($c->param('sort_by')) : ();
 
     # Calculate offset
