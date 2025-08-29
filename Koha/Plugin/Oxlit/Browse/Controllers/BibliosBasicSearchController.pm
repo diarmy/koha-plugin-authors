@@ -83,6 +83,7 @@ sub list {
     my $page = $c->param('page') || 1;
     my $per_page = $c->param('per_page') || 20;
     my $search_in = $c->param('search_in') || '';
+    $search_in =~ s/_/,/g if $search_in;  # Convert underscores to commas
     my $q = $c->param('q') || '';
 
     # Calculate offset
