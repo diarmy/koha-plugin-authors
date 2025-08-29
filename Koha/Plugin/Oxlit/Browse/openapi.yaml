@@ -100,11 +100,15 @@ paths:
           items:
             type: string
             enum:
+              - au
               - au_phr
               - kw
-              - pb_phr
+              - kw_phr
+              - pb
               - se
+              - su
               - su_phr
+              - ti
               - ti_phr
         - name: page
           in: query
