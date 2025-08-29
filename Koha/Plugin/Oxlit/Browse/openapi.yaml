@@ -83,6 +83,69 @@ paths:
           description: Authentication required
           schema:
             $ref: ./openapi/definitions.yaml#/error
+  /biblios/advancedsearch:
+    get:
+      x-mojo-to: "Oxlit::Browse::Controllers::BibliosAdvancedSearchController#list"
+      operationId: ListAdvancedSearchBiblios
+      tags:
+        - advancedsearch
+      produces:
+        - application/json
+      parameters:
+        - name: search_in[]
+          in: query
+          description: Search in
+          required: true
+          type: array
+          items:
+            type: string
+            enum:
+              - au,phr
+              - kw
+              - pb,phr
+              - se
+              - su,phr
+              - ti,phr
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+        - name: q[]
+          in: query
+          description: Search query
+          required: true
+          type: array
+          items:
+            type: string
+        - name: sort_by
+          in: query
+          description: Sort order (title_az or title_za)
+          required: false
+          type: string
+          enum:
+            - author_az
+            - pubdate_dsc
+            - title_az
+      responses:
+        200:
+          description: A List of biblios
+          schema:
+            type: object
+            properties:
+              biblios:
+                $ref: ./openapi/definitions.yaml#/biblios
+              pagination:
+                $ref: ./openapi/definitions.yaml#/pagination
+        401:
+          description: Authentication required
+          schema:
+            $ref: ./openapi/definitions.yaml#/error
   /biblios/basicsearch:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::BibliosBasicSearchController#list"
