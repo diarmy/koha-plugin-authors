@@ -110,6 +110,7 @@ paths:
               - se
               - su
               - su_phr
+              - subject-name-personal
               - ti
               - ti_phr
         - name: page
@@ -178,6 +179,7 @@ paths:
             - se
             - su
             - su_phr
+            - subject-name-personal
             - ti
             - ti_phr
         - name: page
