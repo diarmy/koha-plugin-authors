@@ -169,6 +169,7 @@ paths:
             - au_phr
             - kw
             - kw_phr
+            - ln_trn
             - pb
             - pb_phr
             - se
