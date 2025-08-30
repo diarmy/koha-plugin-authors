@@ -104,7 +104,8 @@ paths:
               - au_phr
               - kw
               - kw_phr
-              - ln_trn
+              - ln
+              - ln_rtrn
               - pb
               - se
               - su
@@ -170,7 +171,8 @@ paths:
             - au_phr
             - kw
             - kw_phr
-            - ln_trn
+            - ln
+            - ln_rtrn
             - pb
             - pb_phr
             - se
