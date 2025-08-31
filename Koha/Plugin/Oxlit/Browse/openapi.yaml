@@ -102,6 +102,7 @@ paths:
             enum:
               - au
               - au_phr
+              - itemtype
               - kw
               - kw_phr
               - ln
@@ -170,6 +171,7 @@ paths:
           enum:
             - au
             - au_phr
+            - itemtype
             - kw
             - kw_phr
             - ln
