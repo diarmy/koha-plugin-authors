@@ -82,9 +82,12 @@ sub list {
     # Get request params
     my $page = $c->param('page') || 1;
     my $per_page = $c->param('per_page') || 20;
-    my @operands = $c->param('q[]') || ();
-    my @indexes = map { s/_/,/g; $_ } $c->param('search_in[]') || ();
-    my @sort_by = $c->param('sort_by') ? ($c->param('sort_by')) : ();
+    my $operands = $c->every_param('q[]');
+    my @operands = @{$operands};
+    my $indexes = map { s/_/,/g; $_ } $c->every_param('search_in[]');
+    my @indexes = @{$indexes};
+    my $sort_by = $c->every_param('sort_by') ? $c->every_param('sort_by') : ();
+    my @sort_by = @{$sort_by};
 
     # Calculate offset
     my $offset = ($page - 1) * $per_page;
