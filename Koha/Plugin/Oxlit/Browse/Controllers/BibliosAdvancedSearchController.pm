@@ -84,8 +84,7 @@ sub list {
     my $per_page = $c->param('per_page') || 20;
     my $operands = $c->every_param('q[]');
     my @operands = @{$operands};
-    my $indexes = map { s/_/,/g; $_ } $c->every_param('search_in[]');
-    my @indexes = @{$indexes};
+    my @indexes = map { s/_/,/g; $_ } $c->every_param('search_in[]');
     my $sort_by = $c->every_param('sort_by') ? $c->every_param('sort_by') : ();
     my @sort_by = @{$sort_by};
 
