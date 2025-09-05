@@ -93,6 +93,7 @@ paths:
         - application/json
       parameters:
         - name: search_in[]
+          collectionFormat: multi
           in: query
           description: Search in
           required: true
@@ -125,6 +126,7 @@ paths:
           required: false
           type: integer
         - name: q[]
+          collectionFormat: multi
           in: query
           description: Search query
           required: true
