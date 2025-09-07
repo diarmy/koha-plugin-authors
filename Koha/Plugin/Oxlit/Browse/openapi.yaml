@@ -83,6 +83,29 @@ paths:
           description: Authentication required
           schema:
             $ref: ./openapi/definitions.yaml#/error
+  /biblios/{biblio_id}/brief-display:
+    get:
+      x-mojo-to: "Oxlit::Browse::Controllers::BiblioBriefDisplayController#get"
+      operationId: GetBiblioBriefDisplay
+      tags:
+        - biblios
+      produces:
+        - application/json
+      parameters:
+        - name: biblio_id
+          in: path
+          required: true
+          type: integer
+          description: The unique identifier for the biblio record
+      responses:
+        200:
+          description: Biblio record retrieved successfully
+          schema:
+            $ref: ./openapi/definitions.yaml#/biblio
+        404:
+          description: Biblio not found
+          schema:
+            $ref: ./openapi/definitions.yaml#/error
   /biblios/advancedsearch:
     get:
       x-mojo-to: "Oxlit::Browse::Controllers::BibliosAdvancedSearchController#list"

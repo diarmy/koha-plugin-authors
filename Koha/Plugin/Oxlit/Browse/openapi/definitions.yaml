@@ -1,4 +1,6 @@
 ---
+biblio:
+  $ref: ./definitions/biblio.yaml
 biblios:
   $ref: ./definitions/biblios.yaml
 error:
