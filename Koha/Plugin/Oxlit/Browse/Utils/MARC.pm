@@ -6,7 +6,7 @@ use MARC::Record;
 use C4::Search qw( new_record_from_zebra );
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(extractBiblioFields getMARCRecords);
+our @EXPORT_OK = qw(extractBiblioFields getMARCRecords getMARCRecord);
 
 =head1 NAME
 
