@@ -21,7 +21,66 @@ Koha::Plugin::Oxlit::Browse::Utils::MARC - Utility functions for MARC record pro
 
 =cut
 
-=head3 extractBiblioFields
+=head2 extractNonRepeatMARCField
+
+Extracts data from a non-repeating MARC field into a hash structure.
+
+=over 4
+
+=item C<$record> - MARC::Record object
+
+=item C<$biblio> - Hash reference to store extracted data
+
+=item C<$field_tag> - MARC field tag
+
+=item C<$subfield_mapping> - Hash reference mapping keys to subfield codes
+
+=back
+
+=cut
+
+sub extractNonRepeatMARCField {
+    my ($record, $biblio, $field_tag, $subfield_mapping) = @_;
+    
+    my %field_data;
+    foreach my $key (keys %$subfield_mapping) {
+        $field_data{$key} = $record->subfield($field_tag, $subfield_mapping->{$key});
+    }
+    $biblio->{$field_tag} = \%field_data;
+}
+
+=head2 extractRepeatMARCFields
+
+Extracts data from repeating MARC fields into an array of hash structures.
+
+=over 4
+
+=item C<$record> - MARC::Record object
+
+=item C<$biblio> - Hash reference to store extracted data
+
+=item C<$field_tag> - MARC field tag
+
+=item C<$subfield_mapping> - Hash reference mapping keys to subfield codes
+
+=back
+
+=cut
+
+sub extractRepeatMARCFields {
+    my ($record, $biblio, $field_tag, $subfield_mapping) = @_;
+    
+    my @fields = $record->field($field_tag);
+    foreach my $field (@fields) {
+        my %field_data;
+        foreach my $key (keys %$subfield_mapping) {
+            $field_data{$key} = $field->subfield($subfield_mapping->{$key});
+        }
+        push @{ $biblio->{$field_tag} }, \%field_data;
+    }
+}
+
+=head2 extractBiblioFields
 
 Extracts bibliographic fields from a MARC record and returns them as a hash reference.
 
@@ -39,74 +98,117 @@ sub extractBiblioFields {
     my ($record) = @_;
     
     my $biblio = {};
-    $biblio->{author} = $record->subfield('100', 'a') || '';
-    $biblio->{author_dates} = $record->subfield('100', 'd') || '';
-    $biblio->{title} = $record->subfield('245', 'a') || '';
-    $biblio->{title_remainder} = $record->subfield('245', 'b') || '';
-    $biblio->{statement_of_responsibility} = $record->subfield('245', 'c') || '';
-    $biblio->{title_proper} = $record->subfield('246', 'a') || '';
-    $biblio->{title_proper_remainder} = $record->subfield('246', 'b') || '';
-    $biblio->{edition_statement} = $record->subfield('250', 'a') || '';
-    $biblio->{publication_location} = $record->subfield('260', 'a') || '';
-    $biblio->{publisher} = $record->subfield('260', 'b') || '';
-    $biblio->{publication_date} = $record->subfield('260', 'c') || '';
-    $biblio->{extent} = $record->subfield('300', 'a') || '';
-    $biblio->{other_physical_details} = $record->subfield('300', 'b') || '';
-    $biblio->{series_title} = $record->subfield('440', 'a') || '';
-    $biblio->{series_volume_number} = $record->subfield('440', 'v') || '';
-    $biblio->{author_as_subject} = $record->subfield('600', 'a') || '';
-    $biblio->{subject} = $record->subfield('650', 'a') || '';
-    $biblio->{subject_general_subdivision} = $record->subfield('650', 'x') || '';
-    $biblio->{added_author} = $record->subfield('700', 'a') || '';
-    $biblio->{added_author_dates} = $record->subfield('700', 'd') || '';
-    $biblio->{host_item_relationship} = $record->subfield('773', 'g') || '';
-    $biblio->{host_item_title} = $record->subfield('773', 't') || '';
-    $biblio->{uri} = $record->subfield('856', 'u') || '';
-    $biblio->{document_type} = $record->subfield('911', 'a') || '';
+
+    # Extract author (100)
+    extractNonRepeatMARCField($record, $biblio, '100', {
+        author => 'a',
+        author_dates => 'd'
+    });
+
+    # Extract title (245)
+    extractNonRepeatMARCField($record, $biblio, '245', {
+        title => 'a',
+        title_remainder => 'b',
+        statement_of_responsibility => 'c'
+    });
+
+    extractRepeatMARCFields($record, $biblio, '246', {
+        title_proper => 'a',
+        title_proper_remainder => 'b'
+    });
+
+    # Extract edition statements (250)
+    extractRepeatMARCFields($record, $biblio, '250', {
+        edition_statement => 'a'
+    });
+
+    # Extract publication statements (260)
+    extractRepeatMARCFields($record, $biblio, '260', {
+        publication_location => 'a',
+        publisher => 'b',
+        publication_date => 'c'
+    });
+
+    # Extract physical description (300)
+    extractNonRepeatMARCField($record, $biblio, '300', {
+        extent => 'a',
+        other_physical_details => 'b'
+    });
+
+    # Extract series statement (440)
+    extractRepeatMARCFields($record, $biblio, '440', {
+        series_title => 'a',
+        series_volume_number => 'v'
+    });
+
+    # Extract subject added entry - personal name (600)
+    extractNonRepeatMARCField($record, $biblio, '600', {
+        author_as_subject => 'a'
+    });
+
+    # Extract subject added entry - topical term (650)
+    extractRepeatMARCFields($record, $biblio, '650', {
+        subject => 'a',
+        subject_general_subdivision => 'x'
+    });
+
+    # Extract added entry - personal name (700)
+    extractRepeatMARCFields($record, $biblio, '700', {
+        added_author => 'a',
+        added_author_dates => 'd'
+    });
+
+    # Extract host item entry (773)
+    extractNonRepeatMARCField($record, $biblio, '773', {
+        host_item_relationship => 'g',
+        host_item_title => 't'
+    });
+
+    # Extract electronic location and access (856)
+    extractRepeatMARCFields($record, $biblio, '856', {
+        uri => 'u'
+    });
+
+    # Extract local field (911)
+    extractNonRepeatMARCField($record, $biblio, '911', {
+        document_type => 'a'
+    });
     
     return $biblio;
 }
 
+=head2 extractBiblioFullDisplayFields
+
+Extracts all bibliographic fields from a MARC record for full display and returns them as a hash reference.
+This function extends extractBiblioFields with additional fields.
+
+=over 4
+
+=item C<$record> - MARC::Record object to extract fields from
+
+=back
+
+Returns a hash reference containing the extracted bibliographic data.
+
+=cut
+
 sub extractBiblioFullDisplayFields {
     my ($record) = @_;
     
-    my $biblio = {};
-    $biblio->{document_type} = $record->subfield('911', 'a') || '';
-    $biblio->{title} = $record->subfield('245', 'a') || '';
-    $biblio->{title_remainder} = $record->subfield('245', 'b') || '';
-    $biblio->{statement_of_responsibility} = $record->subfield('245', 'c') || '';
-    $biblio->{uniform_title} = $record->subfield('240', 'a') || '';
-    $biblio->{uniform_title_language} = $record->subfield('240', 'l') || '';
-    $biblio->{parallel_title} = $record->subfield('246', 'a') || '';
-    $biblio->{author_name} = $record->subfield('100', 'a') || '';
-    $biblio->{author_dates} = $record->subfield('100', 'd') || '';
-    $biblio->{author_role} = $record->subfield('100', 'e') || '';
-    $biblio->{added_author_name} = $record->subfield('700', 'a') || '';
-    $biblio->{added_author_dates} = $record->subfield('700', 'd') || '';
-    $biblio->{added_author_role} = $record->subfield('700', 'e') || '';
-    $biblio->{added_corporate_name} = $record->subfield('710', 'a') || '';
-    $biblio->{added_corporate_sub_unit} = $record->subfield('710', 'b') || '';
-    $biblio->{added_corporate_location} = $record->subfield('710', 'c') || '';
-    $biblio->{added_corporate_date} = $record->subfield('710', 'd') || '';
-    $biblio->{added_corporate_section_number} = $record->subfield('710', 'n') || '';
-    $biblio->{meeting_name} = $record->subfield('111', 'a') || '';
-    $biblio->{meeting_location} = $record->subfield('111', 'c') || '';
-    $biblio->{meeting_dates} = $record->subfield('111', 'd') || '';
-    $biblio->{meeting_section_number} = $record->subfield('111', 'n') || '';
-    $biblio->{added_meeting_name} = $record->subfield('711', 'a') || '';
-    $biblio->{added_meeting_location} = $record->subfield('711', 'c') || '';
-    $biblio->{added_meeting_dates} = $record->subfield('711', 'd') || '';
-    $biblio->{added_meeting_section_number} = $record->subfield('711', 'n') || '';
-    $biblio->{edition_statement} = $record->subfield('250', 'a') || '';
-    $biblio->{publication} = $record->subfield('260', 'a') || '';
-    $biblio->{publisher} = $record->subfield('260', 'b') || '';
-    $biblio->{publication_dates} = $record->subfield('260', 'c') || '';
-    $biblio->{pages} = $record->subfield('300', 'a') || '';
-    $biblio->{other_page_details} = $record->subfield('300', 'b') || '';
+    my $biblio = extractBiblioFields($record);
+    
     $biblio->{language} = $record->subfield('041', 'a') || '';
     $biblio->{original_language} = $record->subfield('041', 'h') || '';
     $biblio->{isbn} = $record->subfield('020', 'a') || '';
     $biblio->{issn} = $record->subfield('022', 'a') || '';
+    $biblio->{author_role} = $record->subfield('100', 'e') || '';
+    $biblio->{meeting_name} = $record->subfield('111', 'a') || '';
+    $biblio->{meeting_location} = $record->subfield('111', 'c') || '';
+    $biblio->{meeting_dates} = $record->subfield('111', 'd') || '';
+    $biblio->{meeting_section_number} = $record->subfield('111', 'n') || '';
+    $biblio->{uniform_title} = $record->subfield('240', 'a') || '';
+    $biblio->{uniform_title_language} = $record->subfield('240', 'l') || '';
+    $biblio->{parallel_title} = $record->subfield('246', 'a') || '';
     $biblio->{notes} = join(' ', $record->subfield('500', 'a')) || '';
     $biblio->{bibliographical_note} = $record->subfield('504', 'a') || '';
     $biblio->{contents} = $record->subfield('505', 'a') || '';
@@ -114,30 +216,47 @@ sub extractBiblioFullDisplayFields {
     $biblio->{language_note} = $record->subfield('546', 'a') || '';
     $biblio->{author_as_subject_name} = join(' ', $record->subfield('600', 'a')) || '';
     $biblio->{author_as_subject_dates} = join(' ', $record->subfield('600', 'd')) || '';
-    $biblio->{subject} = join(' ', $record->subfield('650', 'a')) || '';
     $biblio->{subject_dates} = join(' ', $record->subfield('650', 'd')) || '';
     $biblio->{subject_form_subdivision} = $record->subfield('650', 'v') || '';
-    $biblio->{subject_dates_gen_subdiv} = $record->subfield('650', 'x') || '';
     $biblio->{subject_chron_subdivision} = $record->subfield('650', 'y') || '';
     $biblio->{subject_geo_subdivision} = $record->subfield('650', 'z') || '';
+    $biblio->{added_author_role} = $record->subfield('700', 'e') || '';
+    $biblio->{added_corporate_name} = $record->subfield('710', 'a') || '';
+    $biblio->{added_corporate_sub_unit} = $record->subfield('710', 'b') || '';
+    $biblio->{added_corporate_location} = $record->subfield('710', 'c') || '';
+    $biblio->{added_corporate_date} = $record->subfield('710', 'd') || '';
+    $biblio->{added_corporate_section_number} = $record->subfield('710', 'n') || '';
+    $biblio->{added_meeting_name} = $record->subfield('711', 'a') || '';
+    $biblio->{added_meeting_location} = $record->subfield('711', 'c') || '';
+    $biblio->{added_meeting_dates} = $record->subfield('711', 'd') || '';
+    $biblio->{added_meeting_section_number} = $record->subfield('711', 'n') || '';
     $biblio->{constituent_titles} = $record->subfield('774', 't') || '';
-    $biblio->{source_title} = $record->subfield('773', 't') || '';
-    $biblio->{source_relationship} = $record->subfield('773', 'g') || '';
-    $biblio->{source_type} = $record->subfield('912', 'a') || '';
-    $biblio->{series} = $record->subfield('440', 'a') || '';
-    $biblio->{series_volume} = $record->subfield('440', 'v') || '';
     $biblio->{uri_host_name} = $record->subfield('856', 'a') || '';
-    $biblio->{uri} = $record->subfield('856', 'u') || '';
     $biblio->{uri_control_number} = $record->subfield('856', 'w') || '';
     $biblio->{uri_link_text} = $record->subfield('856', 'y') || '';
     $biblio->{uri_public_note} = $record->subfield('856', 'z') || '';
+    $biblio->{source_type} = $record->subfield('912', 'a') || '';
 
     return $biblio;
 }
 
-=head3 getMARCRecords
+=head2 getMARCRecords
 
 Retrieves and processes MARC records from search results.
+
+=over 4
+
+=item C<$hits> - Total number of search hits
+
+=item C<$results_per_page> - Number of results to process per page
+
+=item C<$offset> - Starting offset for processing
+
+=item C<$marcresults> - Array reference containing raw MARC data
+
+=back
+
+Returns an array reference of MARC::Record objects.
 
 =cut
 
@@ -170,9 +289,17 @@ sub getMARCRecords {
     return \@newresults;
 }
 
-=head3 getMARCRecord
+=head2 getMARCRecord
 
-Extracts and decodes a MARC record from search results
+Extracts and decodes a MARC record from search results.
+
+=over 4
+
+=item C<$marcresults> - Array reference containing raw MARC data
+
+=back
+
+Returns a MARC::Record object or undef on error.
 
 =cut
 

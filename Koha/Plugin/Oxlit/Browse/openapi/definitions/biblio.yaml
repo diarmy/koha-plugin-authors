@@ -1,75 +1,192 @@
 ---
 type: object
 properties:
-  author:
-    type: string
-    description: Main author name (MARC field 100a)
-  author_dates:
-    type: string
-    description: Author's birth/death dates (MARC field 100d)
-  title:
-    type: string
-    description: Main title of the work (MARC field 245a)
-  title_remainder:
-    type: string
-    description: Subtitle or remainder of title (MARC field 245b)
-  statement_of_responsibility:
-    type: string
-    description: Statement of responsibility (MARC field 245c)
-  title_proper:
-    type: string
-    description: Variant title (MARC field 246a)
-  title_proper_remainder:
-    type: string
-    description: Remainder of variant title (MARC field 246b)
-  edition_statement:
-    type: string
-    description: Edition information (MARC field 250a)
-  publication_location:
-    type: string
-    description: Place of publication (MARC field 260a)
-  publisher:
-    type: string
-    description: Publisher name (MARC field 260b)
-  publication_date:
-    type: string
-    description: Date of publication (MARC field 260c)
-  extent:
-    type: string
-    description: Physical extent of the item (MARC field 300a)
-  other_physical_details:
-    type: string
-    description: Other physical details (MARC field 300b)
-  series_title:
-    type: string
-    description: Series title (MARC field 440a)
-  series_volume_number:
-    type: string
-    description: Volume number within series (MARC field 440v)
-  author_as_subject:
-    type: string
-    description: Author as subject (MARC field 600a)
-  subject:
-    type: string
-    description: Topical subject (MARC field 650a)
-  subject_general_subdivision:
-    type: string
-    description: General subdivision of subject (MARC field 650x)
-  added_author:
-    type: string
-    description: Added entry - personal name (MARC field 700a)
-  added_author_dates:
-    type: string
-    description: Dates associated with added author (MARC field 700d)
-  host_item_relationship:
-    type: string
-    description: Host item relationship information (MARC field 773g)
-  host_item_title:
-    type: string
-    description: Title of host item (MARC field 773t)
-  uri:
-    type: string
-    description: Electronic location and access URL (MARC field 856u)
-  document_type:
-    type: string
-    description: Document type (MARC field 911a)
+  100:
+    type: object
+    properties:
+      name:
+        description: Main author name (MARC field 100a)
+        type:
+          - string
+          - "null"
+      dates:
+        description: Author's birth/death dates (MARC field 100d)
+        type:
+          - string
+          - "null"
+  245:
+    type: object
+    properties:
+      main:
+        description: Main title of the work (MARC field 245a)
+        type:
+          - string
+          - "null"
+      remainder:
+        description: Subtitle or remainder of title (MARC field 245b)
+        type:
+          - string
+          - "null"
+      statement_of_responsibility:
+        description: Statement of responsibility (MARC field 245c)
+        type:
+          - string
+          - "null"
+  246:
+    type: array
+    items:
+      type: object
+      properties:
+        title_proper:
+          description: Variant title (MARC field 246a)
+          type:
+            - string
+            - "null"
+        title_proper_remainder:
+          description: Remainder of variant title (MARC field 246b)
+          type:
+            - string
+            - "null"
+  250:
+    type: array
+    items:
+      type: object
+      properties:
+        edition_statement:
+          description: Edition information (MARC field 250a)
+          type:
+            - string
+            - "null"
+  260:
+    type: array
+    items:
+      type: object
+      properties:
+        publication_location:
+          description: Place of publication (MARC field 260a)
+          type: array
+          items:
+            type:
+              - string
+              - "null"
+        publisher:
+          description: Publisher name (MARC field 260b)
+          type: array
+          items:
+            type:
+              - string
+              - "null"
+        publication_date:
+          description: Date of publication (MARC field 260c)
+          type: array
+          items:
+            type:
+              - string
+              - "null"
+  300:
+    type: object
+    properties:
+      extent:
+        description: Physical extent of the item (MARC field 300a)
+        type: array
+        items:
+          type:
+            - string
+            - "null"
+      other_physical_details:
+        description: Other physical details (MARC field 300b)
+        type:
+          - string
+          - "null"
+  440:
+    type: array
+    items:
+      type: object
+      properties:
+        series_title:
+          description: Series title (MARC field 440a)
+          type:
+            - string
+            - "null"
+        series_volume_number:
+          description: Volume number within series (MARC field 440v)
+          type:
+            - string
+            - "null"
+  600:
+    type: array
+    items:
+      type: object
+      properties:
+        author_as_subject:
+          description: Author as subject (MARC field 600a)
+          type:
+            - string
+            - "null"
+  650:
+    type: array
+    items:
+      type: object
+      properties:
+        subject:
+          description: Topical subject (MARC field 650a)
+          type:
+            - string
+            - "null"
+        subject_general_subdivision:
+          description: General subdivision of subject (MARC field 650x)
+          type:
+            - string
+            - "null"
+  700:
+    type: array
+    items:
+      type: object
+      properties:
+        added_author:
+          description: Added entry - personal name (MARC field 700a)
+          type:
+            - string
+            - "null"
+        added_author_dates:
+          description: Dates associated with added author (MARC field 700d)
+          type:
+            - string
+            - "null"
+  773:
+    type: array
+    items:
+      type: object
+      properties:
+        host_item_relationship:
+          description: Host item relationship information (MARC field 773g)
+          type: array
+          items:
+            type:
+              - string
+              - "null"
+        host_item_title:
+          description: Title of host item (MARC field 773t)
+          type:
+            - string
+            - "null"
+  856:
+    type: array
+    items:
+      type: object
+      properties:
+        uri:
+          description: Electronic location and access URL (MARC field 856u)
+          type: array
+          items:
+            type:
+              - string
+              - "null"
+  911:
+    type: object
+    properties:
+      document_type:
+        description: Document type (MARC field 911a)
+        type:
+          - string
+          - "null"
