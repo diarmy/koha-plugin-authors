@@ -74,7 +74,15 @@ sub extractRepeatMARCFields {
     foreach my $field (@fields) {
         my %field_data;
         foreach my $key (keys %$subfield_mapping) {
-            $field_data{$key} = $field->subfield($subfield_mapping->{$key});
+            my $subfield_code = $subfield_mapping->{$key}->{code};
+            my $repeat = $subfield_mapping->{$key}->{repeat};
+            
+            if ($repeat) {
+                my @subfield_values = $field->subfield($subfield_code);
+                $field_data{$key} = \@subfield_values;
+            } else {
+                $field_data{$key} = $field->subfield($subfield_code);
+            }
         }
         push @{ $biblio->{$field_tag} }, \%field_data;
     }
@@ -113,60 +121,60 @@ sub extractBiblioFields {
     });
 
     extractRepeatMARCFields($record, $biblio, '246', {
-        title_proper => 'a',
-        title_proper_remainder => 'b'
+        title_proper => { code => 'a', repeat => 0 },
+        title_proper_remainder => { code => 'b', repeat => 0 }
     });
 
     # Extract edition statements (250)
     extractRepeatMARCFields($record, $biblio, '250', {
-        edition_statement => 'a'
+        edition_statement => { code => 'a', repeat => 0 }
     });
 
     # Extract publication statements (260)
     extractRepeatMARCFields($record, $biblio, '260', {
-        publication_location => 'a',
-        publisher => 'b',
-        publication_date => 'c'
+        publication_location => { code => 'a', repeat => 1 },
+        publisher => { code => 'b', repeat => 1 },
+        publication_date => { code => 'c', repeat => 1 }
     });
 
     # Extract physical description (300)
     extractNonRepeatMARCField($record, $biblio, '300', {
-        extent => 'a',
-        other_physical_details => 'b'
+        extent => { code => 'a', repeat => 1 },
+        other_physical_details => { code => 'b', repeat => 0 }
     });
 
     # Extract series statement (440)
     extractRepeatMARCFields($record, $biblio, '440', {
-        series_title => 'a',
-        series_volume_number => 'v'
+        series_title => { code => 'a', repeat => 0 },
+        series_volume_number => { code => 'v', repeat => 0 }
     });
 
     # Extract subject added entry - personal name (600)
-    extractNonRepeatMARCField($record, $biblio, '600', {
-        author_as_subject => 'a'
+    extractRepeatMARCFields($record, $biblio, '600', {
+        author_as_subject => { code => 'a', repeat => 0 }
     });
 
     # Extract subject added entry - topical term (650)
     extractRepeatMARCFields($record, $biblio, '650', {
-        subject => 'a',
-        subject_general_subdivision => 'x'
+        subject => { code => 'a', repeat => 0 },
+        subject_general_subdivision => { code => 'x', repeat => 0 }
     });
 
     # Extract added entry - personal name (700)
     extractRepeatMARCFields($record, $biblio, '700', {
-        added_author => 'a',
-        added_author_dates => 'd'
+        added_author => { code => 'a', repeat => 0 },
+        added_author_dates => { code => 'd', repeat => 0 }
     });
 
     # Extract host item entry (773)
-    extractNonRepeatMARCField($record, $biblio, '773', {
-        host_item_relationship => 'g',
-        host_item_title => 't'
+    extractRepeatMARCFields($record, $biblio, '773', {
+        host_item_relationship => { code => 'g', repeat => 0 },
+        host_item_title => { code => 't', repeat => 0 }
     });
 
     # Extract electronic location and access (856)
     extractRepeatMARCFields($record, $biblio, '856', {
-        uri => 'u'
+        uri => { code => 'u', repeat => 0 }
     });
 
     # Extract local field (911)

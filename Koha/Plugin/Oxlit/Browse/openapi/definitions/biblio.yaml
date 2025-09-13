@@ -2,7 +2,9 @@
 type: object
 properties:
   100:
-    type: object
+    type:
+      - object
+      - "null"
     properties:
       name:
         description: Main author name (MARC field 100a)
@@ -15,7 +17,9 @@ properties:
           - string
           - "null"
   245:
-    type: object
+    type:
+      - object
+      - "null"
     properties:
       main:
         description: Main title of the work (MARC field 245a)
@@ -33,7 +37,9 @@ properties:
           - string
           - "null"
   246:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -48,7 +54,9 @@ properties:
             - string
             - "null"
   250:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -58,7 +66,9 @@ properties:
             - string
             - "null"
   260:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -84,11 +94,15 @@ properties:
               - string
               - "null"
   300:
-    type: object
+    type:
+      - object
+      - "null"
     properties:
       extent:
         description: Physical extent of the item (MARC field 300a)
-        type: array
+        type:
+          - array
+          - "null"
         items:
           type:
             - string
@@ -99,7 +113,9 @@ properties:
           - string
           - "null"
   440:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -114,7 +130,9 @@ properties:
             - string
             - "null"
   600:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -124,7 +142,9 @@ properties:
             - string
             - "null"
   650:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -139,7 +159,9 @@ properties:
             - string
             - "null"
   700:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -154,7 +176,9 @@ properties:
             - string
             - "null"
   773:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -171,7 +195,9 @@ properties:
             - string
             - "null"
   856:
-    type: array
+    type:
+      - array
+      - "null"
     items:
       type: object
       properties:
@@ -183,7 +209,9 @@ properties:
               - string
               - "null"
   911:
-    type: object
+    type:
+      - object
+      - "null"
     properties:
       document_type:
         description: Document type (MARC field 911a)
