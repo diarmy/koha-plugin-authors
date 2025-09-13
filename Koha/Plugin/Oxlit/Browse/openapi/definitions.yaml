@@ -1,6 +1,6 @@
 ---
-biblio:
-  $ref: ./definitions/biblio.yaml
+biblio-brief:
+  $ref: ./definitions/biblio-brief.yaml
 biblios:
   $ref: ./definitions/biblios.yaml
 error:

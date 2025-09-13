@@ -2,4 +2,4 @@
 type: array
 items:
   schema:
-    $ref: ../definitions.yaml#/biblio
+    $ref: ../definitions.yaml#/biblio-brief
