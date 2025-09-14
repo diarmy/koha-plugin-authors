@@ -21,6 +21,59 @@ Koha::Plugin::Oxlit::Browse::Utils::MARC - Utility functions for MARC record pro
 
 =cut
 
+use constant {
+    DISPLAY_BRIEF => 1,
+    DISPLAY_FULL  => 2,
+    DISPLAY_BOTH  => 3,  # BRIEF | FULL
+};
+
+=head2 _extractFieldData
+
+Extracts subfield data from a MARC field based on configuration settings.
+
+This is a private helper function that processes a MARC field and extracts
+specified subfields according to their configuration. It handles both 
+repeatable and non-repeatable subfields appropriately.
+
+=over 4
+
+=item C<$field> - MARC::Field object to extract data from
+
+=item C<@subfieldSettings> - Array of key-value pairs where keys are field names 
+and values are hash references containing subfield configuration with the following structure:
+    - code: The MARC subfield code (e.g., 'a', 'b', 'c')
+    - repeatable: Boolean indicating if the subfield can appear multiple times
+
+=item C<$display_mode> - Display mode
+
+=back
+
+Returns a hash reference containing the extracted subfield data. For repeatable
+subfields, the value will be an array reference containing all occurrences.
+For non-repeatable subfields, the value will be a scalar.
+
+=cut
+
+sub _extractFieldData {
+    my ($field, $display_mode, @subfieldSettings) = @_;
+    
+    my %field_data;
+    while (my ($key, $config) = splice(@subfieldSettings, 0, 2)) {
+        next if $display_mode == DISPLAY_BRIEF && $config->{display} == DISPLAY_FULL;
+
+        my $subfield_code = $config->{code};
+        my $is_repeatable = $config->{repeatable};
+        
+        if ($is_repeatable) {
+            my @subfield_values = $field->subfield($subfield_code);
+            $field_data{$key} = \@subfield_values;
+        } else {
+            $field_data{$key} = $field->subfield($subfield_code);
+        }
+    }
+    return \%field_data;
+}
+
 =head2 extractNonRepeatMARCField
 
 Extracts data from a non-repeating MARC field into a hash structure.
@@ -35,18 +88,19 @@ Extracts data from a non-repeating MARC field into a hash structure.
 
 =item C<$subfield_mapping> - Hash reference mapping keys to subfield codes
 
+=item C<$display_mode> - Display mode 
+
 =back
 
 =cut
 
 sub extractNonRepeatMARCField {
-    my ($record, $biblio, $field_tag, $subfield_mapping) = @_;
+    my ($record, $biblio, $field_tag, $display_mode, @subfieldSettings) = @_;
     
-    my %field_data;
-    foreach my $key (keys %$subfield_mapping) {
-        $field_data{$key} = $record->subfield($field_tag, $subfield_mapping->{$key});
-    }
-    $biblio->{$field_tag} = \%field_data;
+    my $field = $record->field($field_tag);
+    return unless defined $field;
+    
+    $biblio->{$field_tag} = _extractFieldData($field, $display_mode, @subfieldSettings);
 }
 
 =head2 extractRepeatMARCFields
@@ -63,28 +117,18 @@ Extracts data from repeating MARC fields into an array of hash structures.
 
 =item C<$subfield_mapping> - Hash reference mapping keys to subfield codes
 
+=item C<$display_mode> - Display mode
+
 =back
 
 =cut
 
 sub extractRepeatMARCFields {
-    my ($record, $biblio, $field_tag, $subfield_mapping) = @_;
+    my ($record, $biblio, $field_tag, $display_mode, @subfieldSettings) = @_;
     
     my @fields = $record->field($field_tag);
     foreach my $field (@fields) {
-        my %field_data;
-        foreach my $key (keys %$subfield_mapping) {
-            my $subfield_code = $subfield_mapping->{$key}->{code};
-            my $repeat = $subfield_mapping->{$key}->{repeat};
-            
-            if ($repeat) {
-                my @subfield_values = $field->subfield($subfield_code);
-                $field_data{$key} = \@subfield_values;
-            } else {
-                $field_data{$key} = $field->subfield($subfield_code);
-            }
-        }
-        push @{ $biblio->{$field_tag} }, \%field_data;
+        push @{ $biblio->{$field_tag} }, _extractFieldData($field, $display_mode, @subfieldSettings);
     }
 }
 
@@ -103,149 +147,256 @@ Returns a hash reference containing the extracted bibliographic data.
 =cut
 
 sub extractBiblioFields {
-    my ($record) = @_;
+    my ($record, $display_mode) = @_;
     
     my $biblio = {};
+    my $field_config = getFieldConfiguration();
 
-    # Extract author (100)
-    extractNonRepeatMARCField($record, $biblio, '100', {
-        author => 'a',
-        author_dates => 'd'
-    });
+    foreach my $marc_field (keys %$field_config) {
+        my $config = $field_config->{$marc_field};
+        
+        # Skip fields based on display mode
+        next if $display_mode == DISPLAY_BRIEF && $config->{display} == DISPLAY_FULL;
 
-    # Extract title (245)
-    extractNonRepeatMARCField($record, $biblio, '245', {
-        title => 'a',
-        title_remainder => 'b',
-        statement_of_responsibility => 'c'
-    });
-
-    extractRepeatMARCFields($record, $biblio, '246', {
-        title_proper => { code => 'a', repeat => 0 },
-        title_proper_remainder => { code => 'b', repeat => 0 }
-    });
-
-    # Extract edition statements (250)
-    extractRepeatMARCFields($record, $biblio, '250', {
-        edition_statement => { code => 'a', repeat => 0 }
-    });
-
-    # Extract publication statements (260)
-    extractRepeatMARCFields($record, $biblio, '260', {
-        publication_location => { code => 'a', repeat => 1 },
-        publisher => { code => 'b', repeat => 1 },
-        publication_date => { code => 'c', repeat => 1 }
-    });
-
-    # Extract physical description (300)
-    extractNonRepeatMARCField($record, $biblio, '300', {
-        extent => { code => 'a', repeat => 1 },
-        other_physical_details => { code => 'b', repeat => 0 }
-    });
-
-    # Extract series statement (440)
-    extractRepeatMARCFields($record, $biblio, '440', {
-        series_title => { code => 'a', repeat => 0 },
-        series_volume_number => { code => 'v', repeat => 0 }
-    });
-
-    # Extract subject added entry - personal name (600)
-    extractRepeatMARCFields($record, $biblio, '600', {
-        author_as_subject => { code => 'a', repeat => 0 }
-    });
-
-    # Extract subject added entry - topical term (650)
-    extractRepeatMARCFields($record, $biblio, '650', {
-        subject => { code => 'a', repeat => 0 },
-        subject_general_subdivision => { code => 'x', repeat => 0 }
-    });
-
-    # Extract added entry - personal name (700)
-    extractRepeatMARCFields($record, $biblio, '700', {
-        added_author => { code => 'a', repeat => 0 },
-        added_author_dates => { code => 'd', repeat => 0 }
-    });
-
-    # Extract host item entry (773)
-    extractRepeatMARCFields($record, $biblio, '773', {
-        host_item_relationship => { code => 'g', repeat => 0 },
-        host_item_title => { code => 't', repeat => 0 }
-    });
-
-    # Extract electronic location and access (856)
-    extractRepeatMARCFields($record, $biblio, '856', {
-        uri => { code => 'u', repeat => 0 }
-    });
-
-    # Extract local field (911)
-    extractNonRepeatMARCField($record, $biblio, '911', {
-        document_type => 'a'
-    });
+        # Determine if this is a repeatable field based on configuration
+        if ($config->{repeatable}) {
+            extractRepeatMARCFields($record, $biblio, $marc_field, $display_mode, @{$config->{subfields}});
+        } else {
+            extractNonRepeatMARCField($record, $biblio, $marc_field, $display_mode, @{$config->{subfields}});
+        }
+    }   
     
     return $biblio;
 }
 
-=head2 extractBiblioFullDisplayFields
+sub getFieldConfiguration {
+    my $field_config = {
+        '020' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                isbn => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '022' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                issn => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '041' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                language => {'code' => 'a', repeatable => 1, display => DISPLAY_FULL}, 
+                original_language => {'code' => 'h', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '100' => { 
+            repeatable => 0,
+            display => DISPLAY_BOTH,
+            subfields => [
+                author => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                author_dates => {'code' => 'd', repeatable => 0, display => DISPLAY_BOTH}, 
+                author_role => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '111' => { 
+            repeatable => 0,
+            display => DISPLAY_FULL,
+            subfields => [
+                meeting_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}, 
+                meeting_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}, 
+                meeting_dates => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}, 
+                meeting_section_number => {'code' => 'n', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '240' => { 
+            repeatable => 0,
+            display => DISPLAY_FULL,
+            subfields => [
+                uniform_title => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}, 
+                uniform_title_language => {'code' => 'l', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '245' => { 
+            repeatable => 0,
+            display => DISPLAY_BOTH,
+            subfields => [
+                title => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                title_remainder => {'code' => 'b', repeatable => 0, display => DISPLAY_BOTH}, 
+                statement_of_responsibility => {'code' => 'c', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
+        '246' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                title_proper => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                title_proper_remainder => {'code' => 'b', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
+        '250' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                edition_statement => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
+        '260' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                publication_location => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
+                publisher => {'code' => 'b', repeatable => 1, display => DISPLAY_BOTH}, 
+                publication_date => {'code' => 'c', repeatable => 1, display => DISPLAY_BOTH}
+            ] 
+        },
+        '300' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                extent => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
+                other_physical_details => {'code' => 'b', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
+        '440' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                series_title => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                series_volume_number => {'code' => 'v', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
+        '500' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                notes => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '504' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                bibliographical_note => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '505' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                contents => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '520' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                summary => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '546' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                language_note => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '600' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                author_as_subject => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                author_as_subject_name => {'code' => 'd', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '650' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                subject => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                subject_dates => {'code' => 'd', repeatable => 0, display => DISPLAY_FULL}, 
+                subject_form_subdivision => {'code' => 'v', repeatable => 1, display => DISPLAY_FULL}, 
+                subject_general_subdivision => {'code' => 'x', repeatable => 1, display => DISPLAY_BOTH}, 
+                subject_chron_subdivision => {'code' => 'y', repeatable => 1, display => DISPLAY_FULL}, 
+                subject_geo_subdivision => {'code' => 'z', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '700' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                added_author => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                added_author_dates => {'code' => 'd', repeatable => 0, display => DISPLAY_BOTH},
+                added_author_role => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '710' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                added_corporate_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}, 
+                added_corporate_sub_unit => {'code' => 'b', repeatable => 1, display => DISPLAY_FULL}, 
+                added_corporate_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}, 
+                added_corporate_date => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}, 
+                added_corporate_section_number => {'code' => 'n', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '711' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                added_meeting_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}, 
+                added_meeting_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}, 
+                added_meeting_dates => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}, 
+                added_meeting_section_number => {'code' => 'n', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '773' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                host_item_relationship => {'code' => 'g', repeatable => 1, display => DISPLAY_FULL}, 
+                host_item_title => {'code' => 't', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '774' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                constituent_titles => {'code' => 't', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '856' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                uri_host_name => {'code' => 'a', repeatable => 1, display => DISPLAY_FULL},
+                uri => {'code' => 'u', repeatable => 1, display => DISPLAY_BOTH},
+                uri_control_number => {'code' => 'w', repeatable => 1, display => DISPLAY_FULL}, 
+                uri_link_text => {'code' => 'y', repeatable => 1, display => DISPLAY_FULL}, 
+                uri_public_note => {'code' => 'z', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
+        '911' => { 
+            repeatable => 0,
+            display => DISPLAY_BOTH,
+            subfields => [
+                document_type => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
+        '912' => { 
+            repeatable => 1,
+            display => DISPLAY_FULL,
+            subfields => [
+                source_type => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        }
+    };
 
-Extracts all bibliographic fields from a MARC record for full display and returns them as a hash reference.
-This function extends extractBiblioFields with additional fields.
-
-=over 4
-
-=item C<$record> - MARC::Record object to extract fields from
-
-=back
-
-Returns a hash reference containing the extracted bibliographic data.
-
-=cut
-
-sub extractBiblioFullDisplayFields {
-    my ($record) = @_;
-    
-    my $biblio = extractBiblioFields($record);
-    
-    $biblio->{language} = $record->subfield('041', 'a') || '';
-    $biblio->{original_language} = $record->subfield('041', 'h') || '';
-    $biblio->{isbn} = $record->subfield('020', 'a') || '';
-    $biblio->{issn} = $record->subfield('022', 'a') || '';
-    $biblio->{author_role} = $record->subfield('100', 'e') || '';
-    $biblio->{meeting_name} = $record->subfield('111', 'a') || '';
-    $biblio->{meeting_location} = $record->subfield('111', 'c') || '';
-    $biblio->{meeting_dates} = $record->subfield('111', 'd') || '';
-    $biblio->{meeting_section_number} = $record->subfield('111', 'n') || '';
-    $biblio->{uniform_title} = $record->subfield('240', 'a') || '';
-    $biblio->{uniform_title_language} = $record->subfield('240', 'l') || '';
-    $biblio->{parallel_title} = $record->subfield('246', 'a') || '';
-    $biblio->{notes} = join(' ', $record->subfield('500', 'a')) || '';
-    $biblio->{bibliographical_note} = $record->subfield('504', 'a') || '';
-    $biblio->{contents} = $record->subfield('505', 'a') || '';
-    $biblio->{summary} = $record->subfield('520', 'a') || '';
-    $biblio->{language_note} = $record->subfield('546', 'a') || '';
-    $biblio->{author_as_subject_name} = join(' ', $record->subfield('600', 'a')) || '';
-    $biblio->{author_as_subject_dates} = join(' ', $record->subfield('600', 'd')) || '';
-    $biblio->{subject_dates} = join(' ', $record->subfield('650', 'd')) || '';
-    $biblio->{subject_form_subdivision} = $record->subfield('650', 'v') || '';
-    $biblio->{subject_chron_subdivision} = $record->subfield('650', 'y') || '';
-    $biblio->{subject_geo_subdivision} = $record->subfield('650', 'z') || '';
-    $biblio->{added_author_role} = $record->subfield('700', 'e') || '';
-    $biblio->{added_corporate_name} = $record->subfield('710', 'a') || '';
-    $biblio->{added_corporate_sub_unit} = $record->subfield('710', 'b') || '';
-    $biblio->{added_corporate_location} = $record->subfield('710', 'c') || '';
-    $biblio->{added_corporate_date} = $record->subfield('710', 'd') || '';
-    $biblio->{added_corporate_section_number} = $record->subfield('710', 'n') || '';
-    $biblio->{added_meeting_name} = $record->subfield('711', 'a') || '';
-    $biblio->{added_meeting_location} = $record->subfield('711', 'c') || '';
-    $biblio->{added_meeting_dates} = $record->subfield('711', 'd') || '';
-    $biblio->{added_meeting_section_number} = $record->subfield('711', 'n') || '';
-    $biblio->{constituent_titles} = $record->subfield('774', 't') || '';
-    $biblio->{uri_host_name} = $record->subfield('856', 'a') || '';
-    $biblio->{uri_control_number} = $record->subfield('856', 'w') || '';
-    $biblio->{uri_link_text} = $record->subfield('856', 'y') || '';
-    $biblio->{uri_public_note} = $record->subfield('856', 'z') || '';
-    $biblio->{source_type} = $record->subfield('912', 'a') || '';
-
-    return $biblio;
+    return $field_config;
 }
 
 =head2 getMARCRecords

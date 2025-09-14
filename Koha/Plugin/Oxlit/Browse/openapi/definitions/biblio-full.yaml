@@ -1,0 +1,396 @@
+---
+allOf:
+  - $ref: ../definitions.yaml#/biblio-brief
+  - type: object
+    properties:
+      "041":
+        description: "Language Code (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            language:
+              description: "Language code of text/sound track or separate title (subfield a)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            original_language:
+              description: "Language code of original (subfield h)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+      "020":
+        description: "International Standard Book Number (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            isbn:
+              description: "International Standard Book Number (subfield a)"
+              type:
+                - string
+                - "null"
+      "022":
+        description: "International Standard Serial Number (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            issn:
+              description: "International Standard Serial Number (subfield a)"
+              type:
+                - string
+                - "null"
+      "100":
+        description: "Main Entry - Personal Name (non-repeatable)"
+        type:
+          - object
+          - "null"
+        properties:
+          author_role:
+            description: "Relator term (subfield e)"
+            type:
+              - array
+              - "null"
+            items:
+              type: string
+      "111":
+        description: "Main Entry - Meeting Name (non-repeatable)"
+        type:
+          - object
+          - "null"
+        properties:
+          meeting_name:
+            description: "Meeting name or jurisdiction name as entry element (subfield a)"
+            type:
+              - string
+              - "null"
+          meeting_location:
+            description: "Location of meeting (subfield c)"
+            type:
+              - array
+              - "null"
+            items:
+              type: string
+          meeting_dates:
+            description: "Date of meeting (subfield d)"
+            type:
+              - array
+              - "null"
+            items:
+              type: string
+          meeting_section_number:
+            description: "Number of part/section of a work (subfield n)"
+            type:
+              - array
+              - "null"
+            items:
+              type: string
+      "240":
+        description: "Uniform Title (non-repeatable)"
+        type:
+          - object
+          - "null"
+        properties:
+          uniform_title:
+            description: "Uniform title (subfield a)"
+            type:
+              - string
+              - "null"
+          uniform_title_language:
+            description: "Language of a work (subfield l)"
+            type:
+              - string
+              - "null"
+      "246":
+        description: "Varying Form of Title (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            parallel_title:
+              description: "Title proper/short title (subfield a)"
+              type:
+                - string
+                - "null"
+      "500":
+        description: "General Note (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            notes:
+              description: "General note (subfield a)"
+              type:
+                - string
+                - "null"
+      "504":
+        description: "Bibliography, etc. Note (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            bibliographical_note:
+              description: "Bibliography, etc. note (subfield a)"
+              type:
+                - string
+                - "null"
+      "505":
+        description: "Formatted Contents Note (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            contents:
+              description: "Formatted contents note (subfield a)"
+              type:
+                - string
+                - "null"
+      "520":
+        description: "Summary, etc. (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            summary:
+              description: "Summary, etc. (subfield a)"
+              type:
+                - string
+                - "null"
+      "546":
+        description: "Language Note (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            language_note:
+              description: "Language note (subfield a)"
+              type:
+                - string
+                - "null"
+      "600":
+        description: "Subject Added Entry - Personal Name (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            author_as_subject_name:
+              description: "Personal name (subfield a)"
+              type:
+                - string
+                - "null"
+            author_as_subject_dates:
+              description: "Dates associated with a name (subfield d)"
+              type:
+                - string
+                - "null"
+      "650":
+        description: "Subject Added Entry - Topical Term (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            subject_dates:
+              description: "Chronological subdivision (subfield d)"
+              type:
+                - string
+                - "null"
+            subject_form_subdivision:
+              description: "Form subdivision (subfield v)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            subject_chron_subdivision:
+              description: "Chronological subdivision (subfield y)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            subject_geo_subdivision:
+              description: "Geographic subdivision (subfield z)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+      "700":
+        description: "Added Entry - Personal Name (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            added_author_role:
+              description: "Relator term (subfield e)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+      "710":
+        description: "Added Entry - Corporate Name (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            added_corporate_name:
+              description: "Corporate name or jurisdiction name as entry element (subfield a)"
+              type:
+                - string
+                - "null"
+            added_corporate_sub_unit:
+              description: "Subordinate unit (subfield b)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            added_corporate_location:
+              description: "Location of meeting (subfield c)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            added_corporate_date:
+              description: "Date of meeting or treaty signing (subfield d)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            added_corporate_section_number:
+              description: "Number of part/section of a work (subfield n)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+      "711":
+        description: "Added Entry - Meeting Name (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            added_meeting_name:
+              description: "Meeting name or jurisdiction name as entry element (subfield a)"
+              type:
+                - string
+                - "null"
+            added_meeting_location:
+              description: "Location of meeting (subfield c)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            added_meeting_dates:
+              description: "Date of meeting (subfield d)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            added_meeting_section_number:
+              description: "Number of part/section of a work (subfield n)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+      "774":
+        description: "Constituent Unit Entry (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            constituent_titles:
+              description: "Title (subfield t)"
+              type:
+                - string
+                - "null"
+      "856":
+        description: "Electronic Location and Access (repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            uri_host_name:
+              description: "Host name (subfield a)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            uri_control_number:
+              description: "Record control number (subfield w)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            uri_link_text:
+              description: "Link text (subfield y)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+            uri_public_note:
+              description: "Public note (subfield z)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+      "912":
+        description: "Local Field - Source Type (non-repeatable)"
+        type:
+          - array
+          - "null"
+        items:
+          type: object
+          properties:
+            source_type:
+              description: "Local field - Source type (subfield a)"
+              type:
+                - string
+                - "null"

@@ -95,7 +95,7 @@ properties:
               - "null"
   300:
     type:
-      - object
+      - array
       - "null"
     properties:
       extent:
@@ -156,8 +156,12 @@ properties:
         subject_general_subdivision:
           description: General subdivision of subject (MARC field 650x)
           type:
-            - string
+            - array
             - "null"
+          items:
+            type:
+              - string
+              - "null"
   700:
     type:
       - array
@@ -184,7 +188,9 @@ properties:
       properties:
         host_item_relationship:
           description: Host item relationship information (MARC field 773g)
-          type: array
+          type:
+            - array
+            - "null"
           items:
             type:
               - string

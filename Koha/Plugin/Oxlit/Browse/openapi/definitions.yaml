@@ -1,6 +1,8 @@
 ---
 biblio-brief:
   $ref: ./definitions/biblio-brief.yaml
+biblio-full:
+  $ref: ./definitions/biblio-full.yaml
 biblios:
   $ref: ./definitions/biblios.yaml
 error:

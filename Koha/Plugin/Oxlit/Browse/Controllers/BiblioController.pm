@@ -1,4 +1,4 @@
-package Koha::Plugin::Oxlit::Browse::Controllers::BiblioBriefDisplayController;
+package Koha::Plugin::Oxlit::Browse::Controllers::BiblioController;
 
 # This file is part of Koha.
 #
@@ -28,6 +28,12 @@ use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecor
 use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
 
+use constant {
+    DISPLAY_BRIEF => 1,
+    DISPLAY_FULL  => 2,
+    DISPLAY_BOTH  => 3,  # BRIEF | FULL
+};
+
 =head1 API
 
 =head2 Class Methods
@@ -42,6 +48,7 @@ sub get {
     # Get request params
     my $page = 1;
     my $per_page = 1;
+    my $displayMode = $c->param('display');
     my @operands = ($c->param('biblio_id'));
     my @indexes = ('biblionumber');
     my @sort_by = ();
@@ -87,7 +94,7 @@ sub get {
             $per_page, $offset,       undef,     $itemtypes,
             $query_type,       $scan
         );
-    };
+    }; 
 
     # Retrieve record
     my $record =  getMARCRecord($results_hashref->{$server}->{"RECORDS"});
@@ -98,8 +105,9 @@ sub get {
             openapi => { error => "Record not found" }
         );
     }
-
-    my $biblio = extractBiblioFields($record);
+    
+    my $display_flag = ($displayMode eq 'brief') ? DISPLAY_BRIEF : DISPLAY_FULL;
+    my $biblio = extractBiblioFields($record, $display_flag);
 
     return $c->render(
         status => 200,
