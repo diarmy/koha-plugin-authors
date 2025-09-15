@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use MARC::Record;
 use C4::Search qw( new_record_from_zebra );
+use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF DISPLAY_FULL DISPLAY_BOTH);
 
 use Exporter qw(import);
 our @EXPORT_OK = qw(extractBiblioFields extractBiblioFullDisplayFields getMARCRecords getMARCRecord);
@@ -20,12 +21,6 @@ Koha::Plugin::Oxlit::Browse::Utils::MARC - Utility functions for MARC record pro
     my $records = getMARCRecords($hits, $results_per_page, $offset, $marcresults);
 
 =cut
-
-use constant {
-    DISPLAY_BRIEF => 1,
-    DISPLAY_FULL  => 2,
-    DISPLAY_BOTH  => 3,  # BRIEF | FULL
-};
 
 =head2 _extractFieldData
 
