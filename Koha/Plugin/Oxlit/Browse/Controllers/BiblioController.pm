@@ -24,15 +24,10 @@ use C4::Search      qw( new_record_from_zebra );
 use C4::Languages   qw( getlanguage );
 use CGI qw('-no_undef_params' -utf8 );
 
+use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF DISPLAY_FULL DISPLAY_BOTH);
 use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecord);
 use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
-
-use constant {
-    DISPLAY_BRIEF => 1,
-    DISPLAY_FULL  => 2,
-    DISPLAY_BOTH  => 3,  # BRIEF | FULL
-};
 
 =head1 API
 
