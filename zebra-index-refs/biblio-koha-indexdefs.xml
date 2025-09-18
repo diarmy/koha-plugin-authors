@@ -1424,16 +1424,28 @@
   <facet tag="110" subfields="a">
     <target_index>au:0</target_index>
   </facet>
+  <facet tag="260" subfields="b">
+    <target_index>pb:0</target_index>
+  </facet>
   <facet tag="440" subfields="a">
     <target_index>se:0</target_index>
   </facet>
   <facet tag="490" subfields="a">
     <target_index>se:0</target_index>
   </facet>
+  <facet tag="600" subfields="a">
+    <target_index>Subject-name-personal:0</target_index>
+  </facet>
   <facet tag="630" subfields="a">
     <target_index>su-ut:0</target_index>
   </facet>
   <facet tag="650" subfields="a">
+    <target_index>su-to:0</target_index>
+  </facet>
+  <facet tag="650" subfields="x">
+    <target_index>su-to:0</target_index>
+  </facet>
+  <facet tag="650" subfields="z">
     <target_index>su-to:0</target_index>
   </facet>
   <facet tag="651" subfields="a">
