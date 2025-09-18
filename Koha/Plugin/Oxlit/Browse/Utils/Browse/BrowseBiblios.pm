@@ -51,3 +51,5 @@ sub listBrowseResults {
     my $total_pages = int(($total_count + $per_page - 1) / $per_page);
     return {results => $results, total_count => $total_count, total_pages => $total_pages};
 }
+
+1;
