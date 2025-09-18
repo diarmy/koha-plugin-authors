@@ -236,3 +236,5 @@ sub getFieldConfiguration {
 
     return $field_config;
 }
+
+1;

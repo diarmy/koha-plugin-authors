@@ -77,7 +77,7 @@ sub listBrowseResults {
         );
     };
 
-    my $facets = $facets->[0]->{facets} // [];
+    $facets = $facets->[0]->{facets} // [];
     
     # Filter facets based on starts_with parameter
     if ($starts_with ne '') {
