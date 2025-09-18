@@ -272,6 +272,10 @@ paths:
                       type: string
               pagination:
                 $ref: ./openapi/definitions.yaml#/pagination
+        400:
+          description: Bad Request
+          schema:
+            $ref: ./openapi/definitions.yaml#/error
         401:
           description: Authentication required
           schema:

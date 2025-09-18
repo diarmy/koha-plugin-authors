@@ -11,3 +11,5 @@ use constant {
     DISPLAY_FULL  => 2,
     DISPLAY_BOTH  => 3,  # BRIEF | FULL
 };
+
+1;
