@@ -928,6 +928,13 @@
       </z:index>
     </xslo:if>
   </xslo:template>
+  <xslo:template mode="index_facets" match="marc:datafield[@tag='260']">
+    <xslo:if test="not(@ind1='z')">
+      <z:index name="pb:0">
+        <xslo:value-of select="marc:subfield[@code='b']"/>
+      </z:index>
+    </xslo:if>
+  </xslo:template>
   <xslo:template mode="index_facets" match="marc:datafield[@tag='440']">
     <xslo:if test="not(@ind1='z')">
       <z:index name="se:0">
@@ -938,6 +945,13 @@
   <xslo:template mode="index_facets" match="marc:datafield[@tag='490']">
     <xslo:if test="not(@ind1='z')">
       <z:index name="se:0">
+        <xslo:value-of select="marc:subfield[@code='a']"/>
+      </z:index>
+    </xslo:if>
+  </xslo:template>
+  <xslo:template mode="index_facets" match="marc:datafield[@tag='600']">
+    <xslo:if test="not(@ind1='z')">
+      <z:index name="Subject-name-personal:0">
         <xslo:value-of select="marc:subfield[@code='a']"/>
       </z:index>
     </xslo:if>
@@ -953,6 +967,8 @@
     <xslo:if test="not(@ind1='z')">
       <z:index name="su-to:0">
         <xslo:value-of select="marc:subfield[@code='a']"/>
+        <xslo:value-of select="marc:subfield[@code='x']"/>
+        <xslo:value-of select="marc:subfield[@code='z']"/>
       </z:index>
     </xslo:if>
   </xslo:template>
