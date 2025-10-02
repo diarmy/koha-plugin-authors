@@ -263,7 +263,7 @@ paths:
           schema:
             type: object
             properties:
-              publishers:
+              results:
                 type: array
                 items:
                   type: object

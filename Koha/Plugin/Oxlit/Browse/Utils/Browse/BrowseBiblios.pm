@@ -45,7 +45,10 @@ sub listBrowseResults {
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     
-    my $results = $sth->fetchall_arrayref({}) || [];;
+    my $results = [];
+    while (my $row = $sth->fetchrow_hashref) {
+        push @$results, { title => $row->{$columnName} };
+    }
     
     # Calculate pagination metadata
     my $total_pages = int(($total_count + $per_page - 1) / $per_page);
