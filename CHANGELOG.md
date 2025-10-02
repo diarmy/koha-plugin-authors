@@ -17,8 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Biblio full display endpoint
 
-## [0.1.53-alpha] - 2025-09-05
-
 ## [0.1.54-alpha] - 2025-09-07
 
 ### Added
