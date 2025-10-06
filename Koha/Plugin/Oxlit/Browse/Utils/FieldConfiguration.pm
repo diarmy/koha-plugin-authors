@@ -231,6 +231,13 @@ sub getFieldConfiguration {
             subfields => [
                 source_type => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
             ] 
+        },
+        '999' => { 
+            repeatable => 0,
+            display => DISPLAY_BOTH,
+            subfields => [
+                biblio_number => {'code' => 'c', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
         }
     };
 

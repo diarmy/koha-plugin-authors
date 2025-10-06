@@ -224,3 +224,11 @@ properties:
         type:
           - string
           - "null"
+  999:
+    type:
+      - object
+    properties:
+      biblio_number:
+        description: Internal bibliographic record number (MARC field 999c)
+        type:
+          - string
