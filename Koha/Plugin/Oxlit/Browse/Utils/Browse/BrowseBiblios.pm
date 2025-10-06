@@ -31,15 +31,15 @@ sub listBrowseResults {
     my ($total_count) = $count_sth->fetchrow_array;
     
     # Get paginated authors
-    my $sql = "SELECT TRIM($columnName) FROM biblio WHERE $columnName IS NOT NULL";
+    my $sql = "SELECT TRIM($columnName) as $columnName FROM biblio WHERE TRIM($columnName) IS NOT NULL";
     my @params = ();
     
     if ($starts_with) {
-        $sql .= " AND $columnName LIKE ?";
+        $sql .= " AND TRIM($columnName) LIKE ?";
         push @params, "$starts_with%";
     }
 
-    $sql .= " GROUP BY $columnName ORDER BY $columnName LIMIT ? OFFSET ?";
+    $sql .= " GROUP BY TRIM($columnName) ORDER BY TRIM($columnName) LIMIT ? OFFSET ?";
     push @params, $per_page, $offset;
     
     my $sth = $dbh->prepare($sql);
