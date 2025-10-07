@@ -31,6 +31,13 @@ sub getFieldConfiguration {
                 original_language => {'code' => 'h', repeatable => 1, display => DISPLAY_FULL}
             ] 
         },
+        '090' => {
+            repeatable => 0,
+            display => DISPLAY_BOTH,
+            subfields => [
+                control_number => {'code' => 'c', repeatable => 0, display => DISPLAY_BOTH}
+            ]
+        },
         '100' => { 
             repeatable => 0,
             display => DISPLAY_BOTH,
