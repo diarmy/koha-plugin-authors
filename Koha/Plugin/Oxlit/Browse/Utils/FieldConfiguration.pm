@@ -194,10 +194,10 @@ sub getFieldConfiguration {
         },
         '773' => { 
             repeatable => 1,
-            display => DISPLAY_FULL,
+            display => DISPLAY_BOTH,
             subfields => [
-                host_item_relationship => {'code' => 'g', repeatable => 1, display => DISPLAY_FULL}, 
-                host_item_title => {'code' => 't', repeatable => 0, display => DISPLAY_FULL}
+                host_item_relationship => {'code' => 'g', repeatable => 1, display => DISPLAY_BOTH},
+                host_item_title => {'code' => 't', repeatable => 0, display => DISPLAY_BOTH}
             ] 
         },
         '774' => { 
