@@ -164,7 +164,7 @@ sub getFieldConfiguration {
             display => DISPLAY_BOTH,
             subfields => [
                 author_as_subject => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
-                author_as_subject_name => {'code' => 'd', repeatable => 0, display => DISPLAY_FULL}
+                author_as_subject_dates => {'code' => 'd', repeatable => 0, display => DISPLAY_FULL}
             ] 
         },
         '650' => { 
