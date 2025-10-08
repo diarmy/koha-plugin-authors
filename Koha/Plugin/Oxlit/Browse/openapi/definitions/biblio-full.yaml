@@ -64,6 +64,38 @@ allOf:
               - "null"
             items:
               type: string
+      "110":
+        description: "Main Entry - Corporate Name (non-repeatable)"
+        type:
+          - object
+          - "null"
+        properties:
+          corporate_name:
+            description: "Corporate name or jurisdiction name as entry element (subfield a)"
+            type:
+              - string
+              - "null"
+          corporate_sub_unit:
+            description: "Subordinate unit (subfield b)"
+            type:
+              - array
+              - "null"
+            items:
+              type: string
+          corporate_location:
+            description: "Location of meeting (subfield c)"
+            type:
+              - array
+              - "null"
+            items:
+              type: string
+          corporate_date:
+            description: "Date of meeting or treaty signing (subfield d)"
+            type:
+              - array
+              - "null"
+            items:
+              type: string
       "111":
         description: "Main Entry - Meeting Name (non-repeatable)"
         type:
