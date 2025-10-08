@@ -47,7 +47,17 @@ sub getFieldConfiguration {
                 author_role => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL}
             ] 
         },
-        '111' => { 
+        '110' => {
+            repeatable => 0,
+            display => DISPLAY_FULL,
+            subfields => [
+                corporate_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL},
+                corporate_sub_unit => {'code' => 'b', repeatable => 1, display => DISPLAY_FULL},
+                corporate_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL},
+                corporate_date => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}
+            ]
+        },
+        '111' => {
             repeatable => 0,
             display => DISPLAY_FULL,
             subfields => [
