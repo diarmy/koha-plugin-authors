@@ -31,7 +31,9 @@ sub listBrowseResults {
     my ($total_count) = $count_sth->fetchrow_array;
     
     # Get paginated authors
-    my $sql = "SELECT TRIM($columnName) as $columnName FROM biblio WHERE TRIM($columnName) IS NOT NULL";
+    my $sql = "SELECT TRIM(biblio.$columnName) as $columnName, MIN(biblioitems.itemtype) as itemtype " .
+              "FROM biblio JOIN biblioitems ON biblio.biblionumber = biblioitems.biblionumber " .
+              "WHERE TRIM($columnName) IS NOT NULL";
     my @params = ();
     
     if ($starts_with) {
@@ -47,7 +49,7 @@ sub listBrowseResults {
     
     my $results = [];
     while (my $row = $sth->fetchrow_hashref) {
-        push @$results, { title => $row->{$columnName} };
+        push @$results, { title => $row->{$columnName}, document_type => $row->{itemtype} };
     }
     
     # Calculate pagination metadata
