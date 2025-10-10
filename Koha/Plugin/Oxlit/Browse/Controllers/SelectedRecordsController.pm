@@ -37,7 +37,7 @@ use Koha::SearchEngine::QueryBuilder;
 
 =cut
 
-sub get {
+sub list {
     my $c = shift->openapi->valid_input or return;
     
     # Get request params
