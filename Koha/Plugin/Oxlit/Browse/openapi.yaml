@@ -280,3 +280,34 @@ paths:
           description: Authentication required
           schema:
             $ref: ./openapi/definitions.yaml#/error
+  /biblios/selectedrecords:
+    get:
+      x-mojo-to: "Oxlit::Browse::Controllers::SelectedRecordsController#list"
+      operationId: ListSelectedRecordsBiblios
+      tags:
+        - selectedrecords
+      produces:
+        - application/json
+      parameters:
+        - name: bibid[]
+          collectionFormat: multi
+          in: query
+          description: Biblionumbers to retrieve
+          required: true
+          type: array
+          items:
+            type: integer
+      responses:
+        200:
+          description: A List of biblios for the selected records
+          schema:
+            type: object
+            properties:
+              biblios:
+                $ref: ./openapi/definitions.yaml#/biblios
+              pagination:
+                $ref: ./openapi/definitions.yaml#/pagination
+        404:
+          description: No matching biblio found
+          schema:
+            $ref: ./openapi/definitions.yaml#/error
