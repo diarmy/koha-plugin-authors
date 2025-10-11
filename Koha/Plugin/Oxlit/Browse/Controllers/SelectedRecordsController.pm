@@ -42,9 +42,9 @@ sub list {
     
     # Get request params
     my $page = 1;
-    my $per_page = 1;
+    my $per_page = 20;
     my @operands = @{$c->every_param('bibid[]')};
-    my @indexes = ('biblionumber');
+    my @indexes = map { 'biblionumber' } @operands;
     my @sort_by = ();
 
     # Calculate offset
@@ -57,7 +57,7 @@ sub list {
     my $cgi = CGI->new;
     my $lang = C4::Languages::getlanguage($cgi);
     my @limits = ();
-    my @operators = ();
+    my @operators = map { 'or' } @operands;
     my $weight_search = 0;
     my $whole_record = 0;
     my $scan = 0;
