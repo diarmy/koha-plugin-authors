@@ -83,6 +83,18 @@ paths:
           type: array
           items:
             type: string
+        - name: operators[]
+          collectionFormat: multi
+          in: query
+          description: Operators between search terms (AND, OR, NOT)
+          required: false
+          type: array
+          items:
+            type: string
+            enum:
+              - and
+              - or
+              - not
         - name: sort_by
           in: query
           description: Sort order (title_az or title_za)

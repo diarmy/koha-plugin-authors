@@ -51,6 +51,7 @@ sub list {
     my $per_page = $c->param('per_page') || 20;
     my @operands = @{$c->every_param('q[]')};
     my @indexes = map { (s/_/,/gr) } @{$c->every_param('search_in[]')};
+    my @operators = @{$c->every_param('operators[]')};
     my @sort_by = @{$c->every_param('sort_by')};
 
     # Calculate offset
@@ -63,7 +64,6 @@ sub list {
     my $cgi = CGI->new;
     my $lang = C4::Languages::getlanguage($cgi);
     my @limits = ();
-    my @operators = ();
     my $weight_search = 0;
     my $whole_record = 0;
     my $scan = 0;
