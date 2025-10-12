@@ -26,8 +26,14 @@ sub listBrowseResults {
     my $dbh = C4::Context->dbh;
     
     # Get total count for pagination
-    my $count_sth = $dbh->prepare("SELECT COUNT(DISTINCT TRIM($columnName)) FROM biblio");
-    $count_sth->execute;
+    my @countParams = ();
+    my $countSql = "SELECT COUNT(DISTINCT TRIM($columnName)) FROM biblio";
+    if ($starts_with) {
+        $countSql .= " WHERE TRIM($columnName) LIKE ?";
+        push @countParams, "$starts_with%";
+    }
+    my $count_sth = $dbh->prepare($countSql);
+    $count_sth->execute(@countParams);
     my ($total_count) = $count_sth->fetchrow_array;
     
     # Get paginated authors
