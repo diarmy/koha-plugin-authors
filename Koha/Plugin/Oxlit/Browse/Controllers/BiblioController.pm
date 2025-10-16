@@ -27,7 +27,7 @@ use HTML::Entities;
 
 use Koha::Biblios;
 use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF DISPLAY_FULL DISPLAY_BOTH);
-use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecord);
+use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecords);
 use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
 
@@ -44,7 +44,7 @@ sub get {
     
     # Get request params
     my $page = 1;
-    my $per_page = 1;
+    my $per_page = 100;
     my $displayMode = $c->param('display');
     my @operands = ($c->param('biblio_id'));
     my @indexes = ('biblionumber');
@@ -99,22 +99,33 @@ sub get {
         );
     }; 
 
-    # Retrieve record
-    my $record =  getMARCRecord($results_hashref->{$server}->{"RECORDS"});
-    
-    if (!defined $record) {
+    # Retrieve results
+    my $total_count = $results_hashref->{$server}->{"hits"} // 0;
+    my $total_pages = int(($total_count + $per_page - 1) / $per_page);
+    my @records =  @{ getMARCRecords($total_count, $per_page, $offset, $results_hashref->{$server}->{"RECORDS"}) };
+
+    if (!@records) {
         return $c->render(
             status => 404,
             openapi => { error => "Record not found" }
         );
     }
-    
-    my $display_flag = ($displayMode eq 'brief') ? DISPLAY_BRIEF : DISPLAY_FULL;
-    my $biblio = extractBiblioFields($record, $display_flag);
 
+    foreach my $record (@records) {
+        my $display_flag = ($displayMode eq 'brief') ? DISPLAY_BRIEF : DISPLAY_FULL;
+        my $biblio = extractBiblioFields($record, $display_flag);
+        if (defined $biblio->{'999'}{'biblio_number'} && $biblio->{'999'}{'biblio_number'} eq $bibNumber) {
+            return $c->render(
+                status => 200,
+                openapi => $biblio
+            );
+        }
+        push @$biblios, $biblio;
+    }
+    
     return $c->render(
-        status => 200,
-        openapi => $biblio
+        status => 404,
+        openapi => { error => "Record not found" }
     );
 }
 
