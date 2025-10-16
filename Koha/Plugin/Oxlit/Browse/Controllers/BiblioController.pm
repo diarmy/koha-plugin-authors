@@ -23,11 +23,9 @@ use C4::Auth;
 use C4::Search      qw( new_record_from_zebra );
 use C4::Languages   qw( getlanguage );
 use CGI qw('-no_undef_params' -utf8 );
-use HTML::Entities;
 
-use Koha::Biblios;
 use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF DISPLAY_FULL DISPLAY_BOTH);
-use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecords);
+use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecord);
 use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
 
@@ -44,17 +42,11 @@ sub get {
     
     # Get request params
     my $page = 1;
-    my $per_page = 100;
+    my $per_page = 1;
     my $displayMode = $c->param('display');
     my @operands = ($c->param('biblio_id'));
     my @indexes = ('biblionumber');
-    my @sort_by = ();
-    
-    # Search by biblio id and title.
-    my $bibNumber = HTML::Entities::encode($c->param('biblio_id'));
-    my $biblioStub = Koha::Biblios->find($bibNumber);
-    push @operands, $biblioStub->title if defined $biblioStub;
-    push @indexes, 'ti,phr' if defined $biblioStub;
+    my @sort_by = ('biblionumber_az');
 
     # Calculate offset
     my $offset = ($page - 1) * $per_page;
@@ -99,33 +91,22 @@ sub get {
         );
     }; 
 
-    # Retrieve results
-    my $total_count = $results_hashref->{$server}->{"hits"} // 0;
-    my $total_pages = int(($total_count + $per_page - 1) / $per_page);
-    my @records =  @{ getMARCRecords($total_count, $per_page, $offset, $results_hashref->{$server}->{"RECORDS"}) };
-
-    if (!@records) {
+    # Retrieve record
+    my $record =  getMARCRecord($results_hashref->{$server}->{"RECORDS"});
+    
+    if (!defined $record) {
         return $c->render(
             status => 404,
             openapi => { error => "Record not found" }
         );
     }
-
-    foreach my $record (@records) {
-        my $display_flag = ($displayMode eq 'brief') ? DISPLAY_BRIEF : DISPLAY_FULL;
-        my $biblio = extractBiblioFields($record, $display_flag);
-        if (defined $biblio->{'999'}{'biblio_number'} && $biblio->{'999'}{'biblio_number'} eq $bibNumber) {
-            return $c->render(
-                status => 200,
-                openapi => $biblio
-            );
-        }
-        push @$biblios, $biblio;
-    }
     
+    my $display_flag = ($displayMode eq 'brief') ? DISPLAY_BRIEF : DISPLAY_FULL;
+    my $biblio = extractBiblioFields($record, $display_flag);
+
     return $c->render(
-        status => 404,
-        openapi => { error => "Record not found" }
+        status => 200,
+        openapi => $biblio
     );
 }
 
