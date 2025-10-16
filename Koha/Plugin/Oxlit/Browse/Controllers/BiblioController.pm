@@ -23,7 +23,9 @@ use C4::Auth;
 use C4::Search      qw( new_record_from_zebra );
 use C4::Languages   qw( getlanguage );
 use CGI qw('-no_undef_params' -utf8 );
+use HTML::Entities;
 
+use Koha::Biblios;
 use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF DISPLAY_FULL DISPLAY_BOTH);
 use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecord);
 use Koha::SearchEngine::Search;
@@ -47,6 +49,12 @@ sub get {
     my @operands = ($c->param('biblio_id'));
     my @indexes = ('biblionumber');
     my @sort_by = ();
+    
+    # Search by biblio id and title.
+    my $bibNumber = HTML::Entities::encode($c->param('biblio_id'));
+    my $biblioStub = Koha::Biblios->find($bibNumber);
+    push @operands, $biblioStub->title if defined $biblioStub;
+    push @indexes, 'ti,phr' if defined $biblioStub;
 
     # Calculate offset
     my $offset = ($page - 1) * $per_page;
