@@ -45,7 +45,7 @@ sub get {
     my $per_page = 1;
     my $displayMode = $c->param('display');
     my @operands = ($c->param('biblio_id'));
-    my @indexes = ('biblionumber');
+    my @indexes = ('biblionumber,phr');
     my @sort_by = ('biblionumber_az');
 
     # Calculate offset
