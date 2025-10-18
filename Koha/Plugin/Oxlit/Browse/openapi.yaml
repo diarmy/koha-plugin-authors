@@ -309,6 +309,16 @@ paths:
           type: array
           items:
             type: integer
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
       responses:
         200:
           description: A List of biblios for the selected records

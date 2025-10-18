@@ -41,12 +41,12 @@ sub list {
     my $c = shift->openapi->valid_input or return;
     
     # Get request params
-    my $page = 1;
-    my $per_page = 20;
+    my $page = $c->param('page') || 1;
+    my $per_page = $c->param('per_page') || 20;
     my @operands = @{$c->every_param('bibid[]')};
-    my @indexes = map { 'biblionumber' } @operands;
+    my @indexes = map { 'biblionumber,phr' } @operands;
     my @sort_by = ();
-
+    
     # Calculate offset
     my $offset = ($page - 1) * $per_page;
     
