@@ -19,6 +19,7 @@ use Modern::Perl;
 use Mojo::Base 'Mojolicious::Controller';
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseBiblios qw(listBrowseResults);
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseFacets qw(listBrowseResults);
+use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowsePublishers qw(listBrowseResults);
 
 =head1 API
 
@@ -36,7 +37,7 @@ sub getBrowseResults {
     my %package_map = (
         'author'   => 'BrowseBiblios',
         'authorassubject'    => 'BrowseFacets',
-        'publisher' => 'BrowseFacets',
+        'publisher' => 'BrowsePublishers',
         'seriestitle'   => 'BrowseBiblios',
         'subject'  => 'BrowseFacets',
         'title'    => 'BrowseBiblios',
