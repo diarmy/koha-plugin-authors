@@ -32,13 +32,25 @@ my %unique_subjects_to_insert;
 while (my $row = $sth_select->fetchrow_arrayref) {
     my $marcxml = $row->[0];
 
-    # Use global regex to find ALL occurrences of 650$a
-    while ($marcxml =~ m|<datafield tag="650".*?<subfield code="a">(.*?)<\/subfield>.*?<\/datafield>|gs) {
-        my $subject = $1;
-        $subject =~ s/^\s+|\s+$//g; # Clean whitespace
+    # Use global regex to find ALL occurrences of 650$a, 650$x and 650$z. Concatenate them if they
+    # are in the same datafield.
+    while ($marcxml =~ m|<datafield tag="650".*?>(.*?)<\/datafield>|gs) {
+        my $datafield_content = $1;
+        my @subfields;
         
-        # Stage non-empty, unique subjects in a hash, excluding numeric values
-        $unique_subjects_to_insert{$subject} = 1 if length $subject > 0 && $subject !~ /^\d+$/;
+        # Extract all $a, $x, and $z subfields from this datafield
+        while ($datafield_content =~ m|<subfield code="([axz])">(.*?)<\/subfield>|gs) {
+            my $subfield_value = $2;
+            $subfield_value =~ s/^\s+|\s+$//g; # Clean whitespace
+            push @subfields, $subfield_value if length $subfield_value > 0;
+        }
+        
+        # Concatenate all subfields with " " separator if we have any
+        if (@subfields) {
+            my $subject = join(" ", @subfields);
+            # Stage non-empty, unique subjects in a hash, excluding numeric values
+            $unique_subjects_to_insert{$subject} = 1 if length $subject > 0 && $subject !~ /^\d+$/;
+        }
     }
 }
 $sth_select->finish();
