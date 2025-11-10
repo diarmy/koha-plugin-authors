@@ -18,9 +18,9 @@ package Koha::Plugin::Oxlit::Browse::Controllers::BrowseController;
 use Modern::Perl;
 use Mojo::Base 'Mojolicious::Controller';
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseBiblios qw(listBrowseResults);
-use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseFacets qw(listBrowseResults);
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowsePublishers qw(listBrowseResults);
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseSubjects qw(listBrowseResults);
+use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseAuthorsAsSubject qw(listBrowseResults);
 
 =head1 API
 
@@ -37,7 +37,7 @@ sub getBrowseResults {
     # Map browse_by values to package names
     my %package_map = (
         'author'   => 'BrowseBiblios',
-        'authorassubject'    => 'BrowseFacets',
+        'authorassubject'    => 'BrowseAuthorsAsSubject',
         'publisher' => 'BrowsePublishers',
         'seriestitle'   => 'BrowseBiblios',
         'subject'  => 'BrowseSubjects',
