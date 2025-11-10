@@ -20,6 +20,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseBiblios qw(listBrowseResults);
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseFacets qw(listBrowseResults);
 use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowsePublishers qw(listBrowseResults);
+use Koha::Plugin::Oxlit::Browse::Utils::Browse::BrowseSubjects qw(listBrowseResults);
 
 =head1 API
 
@@ -39,7 +40,7 @@ sub getBrowseResults {
         'authorassubject'    => 'BrowseFacets',
         'publisher' => 'BrowsePublishers',
         'seriestitle'   => 'BrowseBiblios',
-        'subject'  => 'BrowseFacets',
+        'subject'  => 'BrowseSubjects',
         'title'    => 'BrowseBiblios',
     );
     
