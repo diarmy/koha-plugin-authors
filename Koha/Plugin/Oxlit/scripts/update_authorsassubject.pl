@@ -48,8 +48,8 @@ while (my $row = $sth_select->fetchrow_arrayref) {
         # Concatenate all subfields with " " separator if we have any
         if (@subfields) {
             my $author = join(" ", @subfields);
-            # Stage non-empty, unique authors in a hash, excluding numeric values
-            $unique_authors_to_insert{$author} = 1 if length $author > 0 && $author !~ /^\d+$/;
+            # Stage non-empty, unique authors in a hash, excluding authors that have no alphabetic characters
+            $unique_authors_to_insert{$author} = 1 if length $author > 0 && $author =~ /[A-Za-z]/;
         }
     }
 }
