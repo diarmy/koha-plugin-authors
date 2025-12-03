@@ -108,6 +108,15 @@ sub getFieldConfiguration {
                 publication_date => {'code' => 'c', repeatable => 1, display => DISPLAY_BOTH}
             ] 
         },
+        '264' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                publication_location => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
+                publisher => {'code' => 'b', repeatable => 1, display => DISPLAY_BOTH}, 
+                publication_date => {'code' => 'c', repeatable => 1, display => DISPLAY_BOTH}
+            ] 
+        },
         '300' => { 
             repeatable => 1,
             display => DISPLAY_BOTH,
