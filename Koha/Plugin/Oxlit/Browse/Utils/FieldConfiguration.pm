@@ -133,6 +133,15 @@ sub getFieldConfiguration {
                 series_volume_number => {'code' => 'v', repeatable => 0, display => DISPLAY_BOTH}
             ] 
         },
+        '490' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                series_title => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
+                series_volume_number => {'code' => 'v', repeatable => 1, display => DISPLAY_BOTH},
+                issn => {'code' => 'x', repeatable => 1, display => DISPLAY_FULL}
+            ] 
+        },
         '500' => { 
             repeatable => 1,
             display => DISPLAY_FULL,
