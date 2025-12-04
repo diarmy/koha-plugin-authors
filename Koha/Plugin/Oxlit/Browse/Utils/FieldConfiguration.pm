@@ -242,6 +242,14 @@ sub getFieldConfiguration {
                 constituent_titles => {'code' => 't', repeatable => 0, display => DISPLAY_FULL}
             ] 
         },
+        '830' => {
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                series_uniform_title => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                series_volume_number => {'code' => 'v', repeatable => 0, display => DISPLAY_BOTH}
+            ]
+        },
         '856' => { 
             repeatable => 1,
             display => DISPLAY_BOTH,
