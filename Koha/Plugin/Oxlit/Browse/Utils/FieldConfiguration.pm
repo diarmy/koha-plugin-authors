@@ -108,6 +108,15 @@ sub getFieldConfiguration {
                 publication_date => {'code' => 'c', repeatable => 1, display => DISPLAY_BOTH}
             ] 
         },
+        '264' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                publication_location => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
+                publisher => {'code' => 'b', repeatable => 1, display => DISPLAY_BOTH}, 
+                publication_date => {'code' => 'c', repeatable => 1, display => DISPLAY_BOTH}
+            ] 
+        },
         '300' => { 
             repeatable => 1,
             display => DISPLAY_BOTH,
@@ -122,6 +131,15 @@ sub getFieldConfiguration {
             subfields => [
                 series_title => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
                 series_volume_number => {'code' => 'v', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
+        '490' => { 
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                series_title => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
+                series_volume_number => {'code' => 'v', repeatable => 1, display => DISPLAY_BOTH},
+                issn => {'code' => 'x', repeatable => 1, display => DISPLAY_FULL}
             ] 
         },
         '500' => { 
@@ -223,6 +241,14 @@ sub getFieldConfiguration {
             subfields => [
                 constituent_titles => {'code' => 't', repeatable => 0, display => DISPLAY_FULL}
             ] 
+        },
+        '830' => {
+            repeatable => 1,
+            display => DISPLAY_BOTH,
+            subfields => [
+                series_uniform_title => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                series_volume_number => {'code' => 'v', repeatable => 0, display => DISPLAY_BOTH}
+            ]
         },
         '856' => { 
             repeatable => 1,
