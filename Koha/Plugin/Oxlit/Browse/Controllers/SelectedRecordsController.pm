@@ -101,7 +101,6 @@ sub list {
     my $server_results = $results_hashref->{$server} // {};
     my $total_count = $results_hashref->{$server}->{"hits"} // 0;
     my $records_data = $server_results->{"RECORDS"} // [];
-    my $total_pages = int(($total_count + $per_page - 1) / $per_page);
 
     # Retrieve results
     my @records =  @{ getMARCRecords($total_count, $per_page, $offset, $records_data) };
@@ -120,12 +119,16 @@ sub list {
         push @$biblios, $biblio;
     }
 
+    # Recalculate counts after filtering out suppressed records
+    my $updated_total_count = scalar @$biblios;
+    my $total_pages = $updated_total_count > 0 ? int(($updated_total_count + $per_page - 1) / $per_page) : 0;
+
     return $c->render(
         status => 200,
         openapi => {
             biblios => $biblios,
             pagination => {
-                total_count => $total_count,
+                total_count => $updated_total_count,
                 total_pages => $total_pages,
                 current_page => $page,
                 per_page => $per_page
