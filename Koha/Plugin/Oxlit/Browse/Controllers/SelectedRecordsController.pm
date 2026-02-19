@@ -25,7 +25,7 @@ use C4::Languages   qw( getlanguage );
 use CGI qw('-no_undef_params' -utf8 );
 
 use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF);
-use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecords);
+use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecords isOPACSuppressed);
 use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
 
@@ -114,6 +114,8 @@ sub list {
     }
     
     foreach my $record (@records) {
+        next if isOPACSuppressed($record);
+        
         my $biblio = extractBiblioFields($record, DISPLAY_BRIEF);
         push @$biblios, $biblio;
     }
