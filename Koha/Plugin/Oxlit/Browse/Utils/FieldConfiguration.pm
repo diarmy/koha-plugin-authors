@@ -277,6 +277,13 @@ sub getFieldConfiguration {
                 source_type => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
             ] 
         },
+        '942' => { 
+            repeatable => 0,
+            display => DISPLAY_BOTH,
+            subfields => [
+                opac_suppression => {'code' => 'n', repeatable => 0, display => DISPLAY_BOTH}
+            ] 
+        },
         '999' => { 
             repeatable => 0,
             display => DISPLAY_BOTH,

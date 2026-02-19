@@ -243,6 +243,16 @@ properties:
         type:
           - string
           - "null"
+  942:
+    type:
+      - object
+      - "null"
+    properties:
+      opac_suppression:
+        description: OPAC suppression (MARC field 942n)
+        type:
+          - string
+          - "null"
   999:
     type:
       - object
