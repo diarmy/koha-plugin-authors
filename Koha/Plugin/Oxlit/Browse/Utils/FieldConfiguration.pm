@@ -14,6 +14,7 @@ sub getFieldConfiguration {
             display => DISPLAY_FULL,
             subfields => [
                 isbn => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+                qualifying_information => {'code' => 'q', repeatable => 1, display => DISPLAY_FULL}
             ] 
         },
         '022' => { 
@@ -123,6 +124,7 @@ sub getFieldConfiguration {
             subfields => [
                 extent => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
                 other_physical_details => {'code' => 'b', repeatable => 0, display => DISPLAY_BOTH}
+                dimensions => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}
             ] 
         },
         '440' => { 
