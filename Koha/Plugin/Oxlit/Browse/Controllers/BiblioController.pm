@@ -25,7 +25,7 @@ use C4::Languages   qw( getlanguage );
 use CGI qw('-no_undef_params' -utf8 );
 
 use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF DISPLAY_FULL DISPLAY_BOTH);
-use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecord);
+use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecord isOPACSuppressed);
 use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
 
@@ -95,6 +95,13 @@ sub get {
     my $record =  getMARCRecord($results_hashref->{$server}->{"RECORDS"});
     
     if (!defined $record) {
+        return $c->render(
+            status => 404,
+            openapi => { error => "Record not found" }
+        );
+    }
+    
+    if (isOPACSuppressed($record)) {
         return $c->render(
             status => 404,
             openapi => { error => "Record not found" }

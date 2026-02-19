@@ -8,7 +8,7 @@ use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF DISPLAY_FULL 
 use Koha::Plugin::Oxlit::Browse::Utils::FieldConfiguration qw(getFieldConfiguration);
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(extractBiblioFields extractBiblioFullDisplayFields getMARCRecords getMARCRecord);
+our @EXPORT_OK = qw(extractBiblioFields extractBiblioFullDisplayFields getMARCRecords getMARCRecord isOPACSuppressed);
 
 =head1 NAME
 
@@ -248,6 +248,34 @@ sub getMARCRecord {
     }
 
     return $marcrecord;
+}
+
+=head2 isOPACSuppressed
+
+Checks if a MARC record is suppressed from OPAC display.
+
+A record is considered suppressed if the 942$n field is set to "1".
+
+=over 4
+
+=item C<$record> - MARC::Record object to check
+
+=back
+
+Returns 1 if the record is suppressed, 0 otherwise.
+
+=cut
+
+sub isOPACSuppressed {
+    my ($record) = @_;
+    
+    return 0 unless defined $record;
+    
+    my $field_942 = $record->field('942');
+    return 0 unless $field_942;
+    
+    my $opac_suppression = $field_942->subfield('n');
+    return (defined $opac_suppression && $opac_suppression eq '1') ? 1 : 0;
 }
 
 1;
