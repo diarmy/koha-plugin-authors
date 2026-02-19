@@ -29,7 +29,7 @@ use JSON qw( decode_json encode_json );
 use CGI qw('-no_undef_params' -utf8 );
 
 use Koha::Plugin::Oxlit::Browse::Utils::Constants qw(DISPLAY_BRIEF);
-use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecords);
+use Koha::Plugin::Oxlit::Browse::Utils::MARC qw(extractBiblioFields getMARCRecords isOPACSuppressed);
 use Koha::SearchEngine::Search;
 use Koha::SearchEngine::QueryBuilder;
 use Koha::SearchFields;
@@ -104,6 +104,8 @@ sub list {
     my @records =  @{ getMARCRecords($total_count, $per_page, $offset, $results_hashref->{$server}->{"RECORDS"}) };
 
     foreach my $record (@records) {
+        next if isOPACSuppressed($record);
+        
         my $biblio = extractBiblioFields($record, DISPLAY_BRIEF);
         push @$biblios, $biblio;
     }
