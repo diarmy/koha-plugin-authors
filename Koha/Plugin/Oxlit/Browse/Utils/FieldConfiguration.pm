@@ -13,7 +13,7 @@ sub getFieldConfiguration {
             repeatable => 1,
             display => DISPLAY_FULL,
             subfields => [
-                isbn => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+                isbn => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL},
                 qualifying_information => {'code' => 'q', repeatable => 1, display => DISPLAY_FULL}
             ] 
         },
@@ -123,7 +123,7 @@ sub getFieldConfiguration {
             display => DISPLAY_BOTH,
             subfields => [
                 extent => {'code' => 'a', repeatable => 1, display => DISPLAY_BOTH}, 
-                other_physical_details => {'code' => 'b', repeatable => 0, display => DISPLAY_BOTH}
+                other_physical_details => {'code' => 'b', repeatable => 0, display => DISPLAY_BOTH},
                 dimensions => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}
             ] 
         },
@@ -275,6 +275,13 @@ sub getFieldConfiguration {
             display => DISPLAY_FULL,
             subfields => [
                 source_type => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}
+            ] 
+        },
+        '942' => { 
+            repeatable => 0,
+            display => DISPLAY_BOTH,
+            subfields => [
+                opac_suppression => {'code' => 'n', repeatable => 0, display => DISPLAY_BOTH}
             ] 
         },
         '999' => { 
