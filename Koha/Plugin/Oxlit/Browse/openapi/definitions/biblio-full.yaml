@@ -38,6 +38,13 @@ allOf:
               type:
                 - string
                 - "null"
+            qualifying_information:
+              description: "Qualifying information (subfield q)"
+              type:
+                - array
+                - "null"
+              items:
+                type: string
       "022":
         description: "International Standard Serial Number (repeatable)"
         type:

@@ -122,6 +122,15 @@ properties:
         type:
           - string
           - "null"
+      dimensions:
+        description: Dimensions of the item (MARC field 300c)
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - string
+            - "null"
   440:
     type:
       - array
