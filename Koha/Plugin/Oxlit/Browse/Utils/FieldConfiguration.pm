@@ -44,6 +44,7 @@ sub getFieldConfiguration {
             display => DISPLAY_BOTH,
             subfields => [
                 author => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                fuller_form_of_name => {'code' => 'q', repeatable => 0, display => DISPLAY_FULL},
                 author_dates => {'code' => 'd', repeatable => 0, display => DISPLAY_BOTH}, 
                 author_role => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL}
             ] 
@@ -54,6 +55,7 @@ sub getFieldConfiguration {
             subfields => [
                 corporate_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL},
                 corporate_sub_unit => {'code' => 'b', repeatable => 1, display => DISPLAY_FULL},
+                relator_term => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL},
                 corporate_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL},
                 corporate_date => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}
             ]
@@ -63,7 +65,9 @@ sub getFieldConfiguration {
             display => DISPLAY_FULL,
             subfields => [
                 meeting_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}, 
+                subordinate_unit => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL},
                 meeting_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}, 
+                relator_term => {'code' => 'j', repeatable => 1, display => DISPLAY_FULL},
                 meeting_dates => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}, 
                 meeting_section_number => {'code' => 'n', repeatable => 1, display => DISPLAY_FULL}
             ] 
@@ -97,7 +101,8 @@ sub getFieldConfiguration {
             repeatable => 1,
             display => DISPLAY_BOTH,
             subfields => [
-                edition_statement => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}
+                edition_statement => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH},
+                remainder_of_edition_statement => {'code' => 'b', repeatable => 0, display => DISPLAY_BOTH}
             ] 
         },
         '260' => { 
@@ -204,6 +209,7 @@ sub getFieldConfiguration {
             display => DISPLAY_BOTH,
             subfields => [
                 added_author => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                fuller_form_of_name => {'code' => 'q', repeatable => 0, display => DISPLAY_FULL},
                 added_author_dates => {'code' => 'd', repeatable => 0, display => DISPLAY_BOTH},
                 added_author_role => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL}
             ] 
@@ -214,6 +220,7 @@ sub getFieldConfiguration {
             subfields => [
                 added_corporate_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}, 
                 added_corporate_sub_unit => {'code' => 'b', repeatable => 1, display => DISPLAY_FULL}, 
+                relator_term => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL},
                 added_corporate_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}, 
                 added_corporate_date => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}, 
                 added_corporate_section_number => {'code' => 'n', repeatable => 1, display => DISPLAY_FULL}
@@ -224,7 +231,9 @@ sub getFieldConfiguration {
             display => DISPLAY_FULL,
             subfields => [
                 added_meeting_name => {'code' => 'a', repeatable => 0, display => DISPLAY_FULL}, 
+                subordinate_unit => {'code' => 'e', repeatable => 1, display => DISPLAY_FULL},
                 added_meeting_location => {'code' => 'c', repeatable => 1, display => DISPLAY_FULL}, 
+                relator_term => {'code' => 'j', repeatable => 1, display => DISPLAY_FULL},
                 added_meeting_dates => {'code' => 'd', repeatable => 1, display => DISPLAY_FULL}, 
                 added_meeting_section_number => {'code' => 'n', repeatable => 1, display => DISPLAY_FULL}
             ] 
@@ -249,6 +258,7 @@ sub getFieldConfiguration {
             display => DISPLAY_BOTH,
             subfields => [
                 series_uniform_title => {'code' => 'a', repeatable => 0, display => DISPLAY_BOTH}, 
+                issn => {'code' => 'x', repeatable => 0, display => DISPLAY_FULL},
                 series_volume_number => {'code' => 'v', repeatable => 0, display => DISPLAY_BOTH}
             ]
         },
